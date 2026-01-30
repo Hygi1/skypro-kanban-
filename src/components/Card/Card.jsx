@@ -1,10 +1,25 @@
-function Card() {
+function Card({ topic, title, date }) {
+  const getThemeClass = (topic) => {
+    switch (topic) {
+      case "Web Design":
+        return "_orange";
+      case "Research":
+        return "_green";
+      case "Copywriting":
+        return "_purple";
+      default:
+        return "";
+    }
+  };
+
+  const themeClass = getThemeClass(topic);
+
   return (
     <div className="cards__item">
       <div className="cards__card card">
         <div className="card__group">
-          <div className="card__theme _orange">
-            <p className="_orange">Web Design</p>
+          <div className={`card__theme ${themeClass}`}>
+            <p className={themeClass}>{topic}</p>
           </div>
           <a href="#popBrowse" target="_self" rel="noreferrer">
             <div className="card__btn">
@@ -16,7 +31,7 @@ function Card() {
         </div>
         <div className="card__content">
           <a href="" target="_blank" rel="noreferrer">
-            <h3 className="card__title">Название задачи</h3>
+            <h3 className="card__title">{title}</h3>
           </a>
           <div className="card__date">
             <svg
@@ -47,7 +62,7 @@ function Card() {
                 </clipPath>
               </defs>
             </svg>
-            <p>30.10.23</p>
+            <p>{date}</p>
           </div>
         </div>
       </div>
