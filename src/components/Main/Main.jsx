@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import Column from "../Column/Column";
 import { cards } from "../../data.js";
+import { MainWrapper, MainBlock, MainContent, Loading } from "./Main.styled";
 
 function Main() {
   const [isLoading, setIsLoading] = useState(true);
@@ -39,21 +40,21 @@ function Main() {
   ];
 
   return (
-    <main className="main">
+    <MainWrapper>
       <div className="container">
-        <div className="main__block">
+        <MainBlock>
           {isLoading ? (
-            <div className="loading">Данные загружаются...</div>
+            <Loading>Данные загружаются...</Loading>
           ) : (
-            <div className="main__content">
+            <MainContent>
               {columns.map((column, index) => (
                 <Column key={index} title={column.title} cards={column.cards} />
               ))}
-            </div>
+            </MainContent>
           )}
-        </div>
+        </MainBlock>
       </div>
-    </main>
+    </MainWrapper>
   );
 }
 

@@ -1,16 +1,48 @@
 import { useState, useEffect, useRef } from "react";
+import {
+  HeaderWrapper,
+  HeaderBlock,
+  HeaderLogo,
+  HeaderNav,
+  HeaderButton,
+  UserButton,
+  UserPopup,
+  UserName,
+  UserEmail,
+  ThemeToggle,
+  ThemeCheckbox,
+  LogoutButton,
+} from "./Header.styled";
 
 function Header() {
   const [isUserPopupOpen, setIsUserPopupOpen] = useState(false);
-  const [isDarkTheme, setIsDarkTheme] = useState(false);
+
+  const [isDarkTheme, setIsDarkTheme] = useState(() => {
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme) {
+      return savedTheme === "dark";
+    }
+    if (typeof window !== "undefined") {
+      return document.body.classList.contains("dark-theme");
+    }
+    return false;
+  });
+
   const popupRef = useRef(null);
+
+  useEffect(() => {
+    if (isDarkTheme) {
+      document.body.classList.add("dark-theme");
+    } else {
+      document.body.classList.remove("dark-theme");
+    }
+    localStorage.setItem("theme", isDarkTheme ? "dark" : "light");
+  }, [isDarkTheme]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (popupRef.current && !popupRef.current.contains(event.target)) {
-        if (!event.target.closest(".header__user")) {
-          setIsUserPopupOpen(false);
-        }
+        setIsUserPopupOpen(false);
       }
     };
 
@@ -28,14 +60,7 @@ function Header() {
   };
 
   const handleThemeToggle = () => {
-    const newThemeState = !isDarkTheme;
-    setIsDarkTheme(newThemeState);
-
-    if (newThemeState) {
-      document.body.classList.add("dark-theme");
-    } else {
-      document.body.classList.remove("dark-theme");
-    }
+    setIsDarkTheme(!isDarkTheme);
   };
 
   const handleLogoutClick = (e) => {
@@ -45,54 +70,46 @@ function Header() {
   };
 
   return (
-    <header className="header">
+    <HeaderWrapper>
       <div className="container">
-        <div className="header__block">
-          <div className="header__logo _show _light">
+        <HeaderBlock>
+          <HeaderLogo $show={!isDarkTheme}>
             <a href="" target="_self" rel="noreferrer">
               <img src="/images/logo.png" alt="logo" />
             </a>
-          </div>
-          <div className="header__logo _dark">
+          </HeaderLogo>
+
+          <HeaderLogo $show={isDarkTheme}>
             <a href="" target="_self" rel="noreferrer">
               <img src="/images/logo_dark.png" alt="logo" />
             </a>
-          </div>
-          <nav className="header__nav">
-            <a href="#popNewCard" className="header__btn-main-new _hover01">
-              Создать новую задачу
-            </a>
-            <button className="header__user _hover02" onClick={toggleUserPopup}>
-              Ivan Ivanov
-            </button>
+          </HeaderLogo>
+
+          <HeaderNav>
+            <HeaderButton href="#popNewCard">Создать новую задачу</HeaderButton>
+            <UserButton onClick={toggleUserPopup}>Ivan Ivanov</UserButton>
 
             {isUserPopupOpen && (
-              <div className="header__pop-user-set" ref={popupRef}>
-                <p className="pop-user-set__name">Ivan Ivanov</p>
-                <p className="pop-user-set__mail">ivan.ivanov@gmail.com</p>
-                <div className="pop-user-set__theme">
+              <UserPopup ref={popupRef}>
+                <UserName>Ivan Ivanov</UserName>
+                <UserEmail>ivan.ivanov@gmail.com</UserEmail>
+                <ThemeToggle>
                   <p>Темная тема</p>
-                  <input
+                  <ThemeCheckbox
                     type="checkbox"
-                    className="checkbox"
-                    name="checkbox"
                     checked={isDarkTheme}
                     onChange={handleThemeToggle}
                   />
-                </div>
-                <button
-                  type="button"
-                  className="_hover03"
-                  onClick={handleLogoutClick}
-                >
+                </ThemeToggle>
+                <LogoutButton onClick={handleLogoutClick}>
                   <a href="#popExit">Выйти</a>
-                </button>
-              </div>
+                </LogoutButton>
+              </UserPopup>
             )}
-          </nav>
-        </div>
+          </HeaderNav>
+        </HeaderBlock>
       </div>
-    </header>
+    </HeaderWrapper>
   );
 }
 
