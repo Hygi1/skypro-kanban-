@@ -1,3 +1,6 @@
+import { ThemeProvider } from "styled-components";
+import { theme } from "./theme";
+import { GlobalStyles } from "./GlobalStyles";
 import "./App.css";
 import Header from "./components/Header/Header";
 import Main from "./components/Main/Main";
@@ -7,13 +10,16 @@ import PopBrowse from "./components/popup/PopBrowse/PopBrowse";
 
 function App() {
   return (
-    <div className="wrapper">
-      <PopExit />
-      <PopNewCard />
-      <PopBrowse />
-      <Header />
-      <Main />
-    </div>
+    <ThemeProvider theme={theme}>
+      <GlobalStyles />
+      <div className="wrapper">
+        <PopExit />
+        <PopNewCard />
+        <PopBrowse />
+        <Header />
+        <Main />
+      </div>
+    </ThemeProvider>
   );
 }
 
