@@ -4,9 +4,11 @@ export const HeaderWrapper = styled.header`
   width: 100%;
   margin: 0 auto;
   background-color: ${({ theme }) => theme.colors.white};
+  border-bottom: 1px solid ${({ theme }) => theme.colors.border};
 
   body.dark-theme & {
     background-color: ${({ theme }) => theme.colors.darkCardBg};
+    border-bottom-color: ${({ theme }) => theme.colors.darkBorder};
   }
 `;
 
@@ -41,7 +43,7 @@ export const HeaderNav = styled.nav`
   gap: 20px;
 `;
 
-export const HeaderButton = styled.a`
+export const HeaderButton = styled.button`
   width: 178px;
   height: 30px;
   border-radius: ${({ theme }) => theme.borderRadius.small};
@@ -63,6 +65,16 @@ export const HeaderButton = styled.a`
   &:hover {
     background-color: ${({ theme }) => theme.colors.primaryHover};
   }
+
+  a {
+    color: ${({ theme }) => theme.colors.white};
+    text-decoration: none;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 `;
 
 export const UserButton = styled.button`
@@ -77,20 +89,21 @@ export const UserButton = styled.button`
   background: none;
   border: none;
   cursor: pointer;
-  padding: 0;
+  padding: 0 20px 0 0;
   transition: color 0.3s ease;
+  position: relative;
 
   &::after {
     content: "";
-    display: block;
+    position: absolute;
+    top: 50%;
+    right: 0;
     width: 6px;
     height: 6px;
     border-radius: 1px;
     border-left: 1.9px solid ${({ theme }) => theme.colors.primary};
     border-bottom: 1.9px solid ${({ theme }) => theme.colors.primary};
-    transform: rotate(-45deg);
-    margin: -6px 0 0 5px;
-    padding: 0;
+    transform: rotate(-45deg) translateY(-50%);
     transition: border-color 0.3s ease;
   }
 
@@ -122,13 +135,13 @@ export const UserButton = styled.button`
   }
 `;
 
-export const UserPopup = styled.div`
+export const PopupUserSet = styled.div`
   position: absolute;
   top: 61px;
   right: 0;
   width: 213px;
   height: 205px;
-  border-radius: ${({ theme }) => theme.borderRadius.large};
+  border-radius: 10px;
   border: 0.7px solid ${({ theme }) => theme.colors.borderGray};
   background: ${({ theme }) => theme.colors.white};
   box-shadow: ${({ theme }) => theme.shadows.popup};
@@ -138,7 +151,7 @@ export const UserPopup = styled.div`
   animation: fadeIn 0.2s ease-out;
 
   body.dark-theme & {
-    background: ${({ theme }) => theme.colors.darkBg};
+    background: ${({ theme }) => theme.colors.darkCardBg};
     border-color: ${({ theme }) => theme.colors.darkBorder};
   }
 
@@ -154,8 +167,8 @@ export const UserPopup = styled.div`
   }
 `;
 
-export const UserName = styled.p`
-  color: ${({ theme }) => theme.colors.black};
+export const PopupUserName = styled.p`
+  color: ${({ theme }) => theme.colors.text};
   font-size: 14px;
   font-weight: 500;
   line-height: 21px;
@@ -167,7 +180,7 @@ export const UserName = styled.p`
   }
 `;
 
-export const UserEmail = styled.p`
+export const PopupUserEmail = styled.p`
   color: ${({ theme }) => theme.colors.gray};
   font-size: 14px;
   line-height: 21px;
@@ -175,14 +188,14 @@ export const UserEmail = styled.p`
   margin-bottom: 10px;
 `;
 
-export const ThemeToggle = styled.div`
+export const PopupThemeToggle = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 30px;
 
   p {
-    color: ${({ theme }) => theme.colors.black};
+    color: ${({ theme }) => theme.colors.text};
     font-size: 14px;
     line-height: 21px;
     letter-spacing: -0.14px;
@@ -193,7 +206,7 @@ export const ThemeToggle = styled.div`
   }
 `;
 
-export const ThemeCheckbox = styled.input`
+export const PopupThemeCheckbox = styled.input`
   position: relative;
   width: 24px;
   height: 13px;
@@ -221,7 +234,7 @@ export const ThemeCheckbox = styled.input`
   }
 `;
 
-export const LogoutButton = styled.button`
+export const PopupLogoutButton = styled.button`
   width: 72px;
   height: 30px;
   background: transparent;
@@ -232,23 +245,19 @@ export const LogoutButton = styled.button`
   cursor: pointer;
   transition: all 0.3s ease;
 
-  a {
-    color: ${({ theme }) => theme.colors.primary};
-    text-decoration: none;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: color 0.3s ease;
-  }
-
   &:hover {
     background-color: ${({ theme }) => theme.colors.primary};
     color: ${({ theme }) => theme.colors.white};
+  }
 
-    a {
-      color: ${({ theme }) => theme.colors.white};
+  body.dark-theme & {
+    color: ${({ theme }) => theme.colors.white};
+    border-color: ${({ theme }) => theme.colors.white};
+
+    &:hover {
+      background-color: ${({ theme }) => theme.colors.white};
+      color: ${({ theme }) => theme.colors.darkBg};
+      border-color: ${({ theme }) => theme.colors.white};
     }
   }
 `;

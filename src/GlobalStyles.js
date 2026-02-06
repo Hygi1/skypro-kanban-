@@ -22,111 +22,11 @@ export const GlobalStyles = createGlobalStyle`
   ._btn {
     cursor: pointer;
     outline: none;
+    font-family: inherit;
   }
 
   ul li {
     list-style: none;
-  }
-
-  html,
-  body {
-    width: 100%;
-    height: 100%;
-    font-family: ${({ theme }) => theme.fonts.main};
-    color: ${({ theme }) => theme.colors.black};
-  }
-
-  .wrapper {
-    max-width: 100%;
-    width: 100vw;
-    min-height: 100vh;
-    overflow: hidden;
-    background-color: ${({ theme }) => theme.colors.lightGray};
-  }
-
-  .container {
-    max-width: 1260px;
-    width: 100%;
-    margin: 0 auto;
-    padding: 0 30px;
-  }
-
-  ._orange {
-    background-color: ${({ theme }) => theme.colors.orangeBg};
-    color: ${({ theme }) => theme.colors.orange};
-  }
-
-  ._green {
-    background-color: ${({ theme }) => theme.colors.greenBg};
-    color: ${({ theme }) => theme.colors.green};
-  }
-
-  ._purple {
-    background-color: ${({ theme }) => theme.colors.purpleBg};
-    color: ${({ theme }) => theme.colors.purple};
-  }
-
-  ._gray {
-    background-color: ${({ theme }) => theme.colors.gray};
-    color: ${({ theme }) => theme.colors.white};
-  }
-
-  ._active-category {
-    opacity: 1 !important;
-  }
-
-  ._hide {
-    display: none;
-  }
-
-  ._dark {
-    display: none;
-  }
-
-  ._btn-bor {
-    border-radius: ${({ theme }) => theme.borderRadius.small};
-    border: 0.7px solid ${({ theme }) => theme.colors.primary};
-    background: transparent;
-    color: ${({ theme }) => theme.colors.primary};
-    
-    a {
-      color: ${({ theme }) => theme.colors.primary};
-    }
-  }
-
-  ._btn-bg {
-    border-radius: ${({ theme }) => theme.borderRadius.small};
-    background: ${({ theme }) => theme.colors.primary};
-    border: none;
-    color: ${({ theme }) => theme.colors.white};
-    
-    a {
-      color: ${({ theme }) => theme.colors.white};
-    }
-  }
-
-  ._hover01:hover {
-    background-color: ${({ theme }) => theme.colors.primaryHover};
-  }
-
-  ._hover02:hover,
-  .header__user:hover {
-    color: ${({ theme }) => theme.colors.primaryHover};
-  }
-
-  ._hover02:hover::after,
-  .header__user:hover::after {
-    border-left-color: ${({ theme }) => theme.colors.primaryHover};
-    border-bottom-color: ${({ theme }) => theme.colors.primaryHover};
-  }
-
-  ._hover03:hover {
-    background-color: ${({ theme }) => theme.colors.primaryHover};
-    color: ${({ theme }) => theme.colors.white};
-  }
-
-  ._hover03:hover a {
-    color: ${({ theme }) => theme.colors.white};
   }
 
   @keyframes card-animation {
@@ -140,12 +40,102 @@ export const GlobalStyles = createGlobalStyle`
     }
   }
 
+  html,
+  body {
+    width: 100%;
+    height: 100%;
+    font-family: "Roboto", Arial, Helvetica, sans-serif;
+    color: #000000;
+  }
+
   body.dark-theme {
-    background-color: ${({ theme }) => theme.colors.darkBg};
-    color: ${({ theme }) => theme.colors.white};
-    
-    .wrapper {
-      background-color: ${({ theme }) => theme.colors.darkBg};
+    color: #FFFFFF;
+  }
+
+  .wrapper {
+    max-width: 100%;
+    width: 100vw;
+    min-height: 100vh;
+    overflow: hidden;
+    background-color: #F1F1F1;
+  }
+
+  body.dark-theme .wrapper {
+    background-color: #151419;
+  }
+
+  .container {
+    max-width: 1260px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 30px;
+  }
+
+  @media (max-width: 1200px) {
+    .container {
+      padding: 0 15px;
     }
+  }
+
+  /* Классы для совместимости с HTML */
+  ._hover01:hover {
+    background-color: #33399b !important;
+  }
+
+  ._hover02:hover, .header__user:hover {
+    color: #33399b !important;
+  }
+
+  ._hover02:hover::after, .header__user:hover::after {
+    border-left-color: #33399b !important;
+    border-bottom-color: #33399b !important;
+  }
+
+  ._hover03:hover {
+    background-color: #33399b !important;
+    color: #FFFFFF !important;
+  }
+
+  ._hover03:hover a {
+    color: #FFFFFF !important;
+  }
+
+  ._orange {
+    background-color: #FFE4C2 !important;
+    color: #FF6D00 !important;
+  }
+
+  ._green {
+    background-color: #B4FDD1 !important;
+    color: #06B16E !important;
+  }
+
+  ._purple {
+    background-color: #E9D4FF !important;
+    color: #9A48F1 !important;
+  }
+
+  ._gray {
+    background: #94A6BE !important;
+    color: #FFFFFF !important;
+  }
+
+  ._active-category {
+    opacity: 1 !important;
+  }
+
+  ._hide {
+    display: none !important;
+  }
+
+  .subttl {
+    color: #000 !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    line-height: 1 !important;
+  }
+
+  body.dark-theme .subttl {
+    color: #FFFFFF !important;
   }
 `;

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import {
   CardItem,
   CardWrapper,
@@ -10,59 +10,40 @@ import {
   CardDate,
 } from "./Card.styled";
 
-function Card({ topic, title, date }) {
-  const [isDarkTheme, setIsDarkTheme] = useState(false);
+const Card = ({ card }) => {
+  if (!card) {
+    return null;
+  }
 
-  useEffect(() => {
-    const checkTheme = () => {
-      setIsDarkTheme(document.body.classList.contains("dark-theme"));
-    };
-
-    checkTheme();
-
-    const observer = new MutationObserver(checkTheme);
-    observer.observe(document.body, {
-      attributes: true,
-      attributeFilter: ["class"],
-    });
-
-    return () => observer.disconnect();
-  }, []);
-
-  const getThemeColor = (topic) => {
-    switch (topic) {
-      case "Web Design":
-        return "orange";
-      case "Research":
-        return "green";
-      case "Copywriting":
-        return "purple";
-      default:
-        return "gray";
-    }
-  };
-
-  const themeColor = getThemeColor(topic);
+  const {
+    id = "",
+    title = "Без названия",
+    category = "Без категории",
+    theme = "gray",
+    date = "",
+  } = card;
 
   return (
     <CardItem>
-      <CardWrapper $isDark={isDarkTheme}>
+      <CardWrapper>
         <CardGroup>
-          <CardTheme $color={themeColor}>
-            <p>{topic}</p>
+          <CardTheme $color={theme} className={`card__theme _${theme}`}>
+            <p className={`_${theme}`}>{category}</p>
           </CardTheme>
-          <a href="#popBrowse" target="_self" rel="noreferrer">
-            <CardButton>
-              <div></div>
-              <div></div>
-              <div></div>
-            </CardButton>
-          </a>
+          <div style={{ marginLeft: "auto" }}>
+            <Link to={`/card/${id}`}>
+              <CardButton>
+                <div></div>
+                <div></div>
+                <div></div>
+              </CardButton>
+            </Link>
+          </div>
         </CardGroup>
         <CardContent>
-          <a href="#popBrowse" target="_self" rel="noreferrer">
-            <CardTitle $isDark={isDarkTheme}>{title}</CardTitle>
-          </a>
+          <Link to={`/card/${id}`}>
+            <CardTitle>{title}</CardTitle>
+          </Link>
           <CardDate>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -98,6 +79,6 @@ function Card({ topic, title, date }) {
       </CardWrapper>
     </CardItem>
   );
-}
+};
 
 export default Card;

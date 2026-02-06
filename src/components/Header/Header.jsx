@@ -1,4 +1,6 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useContext } from "react";
+import { Link } from "react-router-dom";
+import { ThemeToggleContext } from "../../context/ThemeContext";
 import {
   HeaderWrapper,
   HeaderBlock,
@@ -6,105 +8,71 @@ import {
   HeaderNav,
   HeaderButton,
   UserButton,
-  UserPopup,
-  UserName,
-  UserEmail,
-  ThemeToggle,
-  ThemeCheckbox,
-  LogoutButton,
+  PopupUserSet,
+  PopupUserName,
+  PopupUserEmail,
+  PopupThemeToggle,
+  PopupThemeCheckbox,
+  PopupLogoutButton,
 } from "./Header.styled";
 
 function Header() {
   const [isUserPopupOpen, setIsUserPopupOpen] = useState(false);
+  const { isDarkTheme, toggleTheme, isLoggedIn } =
+    useContext(ThemeToggleContext);
 
-  const [isDarkTheme, setIsDarkTheme] = useState(() => {
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme) {
-      return savedTheme === "dark";
-    }
-    if (typeof window !== "undefined") {
-      return document.body.classList.contains("dark-theme");
-    }
-    return false;
-  });
-
-  const popupRef = useRef(null);
-
-  useEffect(() => {
-    if (isDarkTheme) {
-      document.body.classList.add("dark-theme");
-    } else {
-      document.body.classList.remove("dark-theme");
-    }
-    localStorage.setItem("theme", isDarkTheme ? "dark" : "light");
-  }, [isDarkTheme]);
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (popupRef.current && !popupRef.current.contains(event.target)) {
-        setIsUserPopupOpen(false);
-      }
-    };
-
-    if (isUserPopupOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [isUserPopupOpen]);
-
-  const toggleUserPopup = () => {
-    setIsUserPopupOpen(!isUserPopupOpen);
-  };
-
-  const handleThemeToggle = () => {
-    setIsDarkTheme(!isDarkTheme);
-  };
-
-  const handleLogoutClick = (e) => {
-    e.preventDefault();
-    setIsUserPopupOpen(false);
-    window.location.hash = "#popExit";
-  };
+  if (!isLoggedIn) {
+    return null;
+  }
 
   return (
     <HeaderWrapper>
       <div className="container">
         <HeaderBlock>
           <HeaderLogo $show={!isDarkTheme}>
-            <a href="" target="_self" rel="noreferrer">
+            <Link to="/">
               <img src="/images/logo.png" alt="logo" />
-            </a>
+            </Link>
           </HeaderLogo>
 
           <HeaderLogo $show={isDarkTheme}>
-            <a href="" target="_self" rel="noreferrer">
+            <Link to="/">
               <img src="/images/logo_dark.png" alt="logo" />
-            </a>
+            </Link>
           </HeaderLogo>
 
           <HeaderNav>
-            <HeaderButton href="#popNewCard">Создать новую задачу</HeaderButton>
-            <UserButton onClick={toggleUserPopup}>Ivan Ivanov</UserButton>
+            <HeaderButton as={Link} to="/add" className="_hover01">
+              Создать новую задачу
+            </HeaderButton>
+
+            <UserButton
+              onClick={() => setIsUserPopupOpen(!isUserPopupOpen)}
+              className="_hover02"
+            >
+              Ivan Ivanov
+            </UserButton>
 
             {isUserPopupOpen && (
-              <UserPopup ref={popupRef}>
-                <UserName>Ivan Ivanov</UserName>
-                <UserEmail>ivan.ivanov@gmail.com</UserEmail>
-                <ThemeToggle>
+              <PopupUserSet>
+                <PopupUserName>Ivan Ivanov</PopupUserName>
+                <PopupUserEmail>ivan.ivanov@gmail.com</PopupUserEmail>
+                <PopupThemeToggle>
                   <p>Темная тема</p>
-                  <ThemeCheckbox
+                  <PopupThemeCheckbox
                     type="checkbox"
                     checked={isDarkTheme}
-                    onChange={handleThemeToggle}
+                    onChange={toggleTheme}
                   />
-                </ThemeToggle>
-                <LogoutButton onClick={handleLogoutClick}>
-                  <a href="#popExit">Выйти</a>
-                </LogoutButton>
-              </UserPopup>
+                </PopupThemeToggle>
+                <PopupLogoutButton
+                  as={Link}
+                  to="/exit"
+                  onClick={() => setIsUserPopupOpen(false)}
+                >
+                  Выйти
+                </PopupLogoutButton>
+              </PopupUserSet>
             )}
           </HeaderNav>
         </HeaderBlock>

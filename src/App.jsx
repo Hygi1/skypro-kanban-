@@ -1,25 +1,55 @@
+import { useState, useEffect } from "react";
+import { BrowserRouter } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
-import { theme } from "./theme";
+import { lightTheme, darkTheme } from "./theme";
 import { GlobalStyles } from "./GlobalStyles";
+import { ThemeToggleProvider } from "./context/ThemeToggleProvider";
+import AppRoutes from "./AppRoutes";
 import "./App.css";
-import Header from "./components/Header/Header";
-import Main from "./components/Main/Main";
-import PopExit from "./components/popup/PopExit/PopExit";
-import PopNewCard from "./components/popup/PopNewCard/PopNewCard";
-import PopBrowse from "./components/popup/PopBrowse/PopBrowse";
 
 function App() {
+  const [isDarkTheme, setIsDarkTheme] = useState(() => {
+    const savedTheme = localStorage.getItem("theme");
+    return savedTheme === "dark";
+  });
+
+  const toggleTheme = () => {
+    const newTheme = !isDarkTheme;
+    setIsDarkTheme(newTheme);
+    localStorage.setItem("theme", newTheme ? "dark" : "light");
+
+    if (newTheme) {
+      document.body.classList.remove("light-theme");
+      document.body.classList.add("dark-theme");
+    } else {
+      document.body.classList.remove("dark-theme");
+      document.body.classList.add("light-theme");
+    }
+  };
+
+  useEffect(() => {
+    if (isDarkTheme) {
+      document.body.classList.add("dark-theme");
+      document.body.classList.remove("light-theme");
+    } else {
+      document.body.classList.add("light-theme");
+      document.body.classList.remove("dark-theme");
+    }
+  }, [isDarkTheme]);
+
+  const currentTheme = isDarkTheme ? darkTheme : lightTheme;
+
   return (
-    <ThemeProvider theme={theme}>
-      <GlobalStyles />
-      <div className="wrapper">
-        <PopExit />
-        <PopNewCard />
-        <PopBrowse />
-        <Header />
-        <Main />
-      </div>
-    </ThemeProvider>
+    <ThemeToggleProvider toggleTheme={toggleTheme}>
+      <ThemeProvider theme={currentTheme}>
+        <GlobalStyles />
+        <BrowserRouter>
+          <div className="wrapper">
+            <AppRoutes />
+          </div>
+        </BrowserRouter>
+      </ThemeProvider>
+    </ThemeToggleProvider>
   );
 }
 
