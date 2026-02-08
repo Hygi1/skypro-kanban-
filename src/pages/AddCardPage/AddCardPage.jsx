@@ -2,7 +2,7 @@ import { useState, useContext } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import Header from "../../components/Header/Header";
 import Calendar from "../../components/Calendar/Calendar";
-import { ThemeToggleContext } from "../../context/ThemeContext";
+import { AuthContext } from "../../context/AuthContext";
 import {
   AddCardContainer,
   AddCardBlock,
@@ -28,7 +28,7 @@ const AddCardPage = () => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [category, setCategory] = useState("orange");
   const navigate = useNavigate();
-  const { isLoggedIn } = useContext(ThemeToggleContext);
+  const { isLoggedIn } = useContext(AuthContext);
 
   const handleSubmit = (e) => {
     e.preventDefault();

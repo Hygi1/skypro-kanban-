@@ -4,13 +4,13 @@ import { ThemeProvider } from "styled-components";
 import { lightTheme, darkTheme } from "./theme";
 import { GlobalStyles } from "./GlobalStyles";
 import { ThemeToggleProvider } from "./context/ThemeToggleProvider";
+import { AuthProvider } from "./context/AuthProvider";
 import AppRoutes from "./AppRoutes";
 import "./App.css";
 
 function App() {
   const [isDarkTheme, setIsDarkTheme] = useState(() => {
-    const savedTheme = localStorage.getItem("theme");
-    return savedTheme === "dark";
+    return localStorage.getItem("theme") === "dark";
   });
 
   const toggleTheme = () => {
@@ -40,16 +40,19 @@ function App() {
   const currentTheme = isDarkTheme ? darkTheme : lightTheme;
 
   return (
-    <ThemeToggleProvider toggleTheme={toggleTheme}>
-      <ThemeProvider theme={currentTheme}>
-        <GlobalStyles />
-        <BrowserRouter>
-          <div className="wrapper">
-            <AppRoutes />
-          </div>
-        </BrowserRouter>
-      </ThemeProvider>
-    </ThemeToggleProvider>
+    <AuthProvider>
+      {" "}
+      <ThemeToggleProvider toggleTheme={toggleTheme}>
+        <ThemeProvider theme={currentTheme}>
+          <GlobalStyles />
+          <BrowserRouter>
+            <div className="wrapper">
+              <AppRoutes />
+            </div>
+          </BrowserRouter>
+        </ThemeProvider>
+      </ThemeToggleProvider>
+    </AuthProvider>
   );
 }
 

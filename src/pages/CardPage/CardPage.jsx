@@ -1,9 +1,8 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import Header from "../../components/Header/Header";
 import Calendar from "../../components/Calendar/Calendar";
 import { cards as initialCards } from "../../data";
-import { ThemeToggleContext } from "../../context/ThemeContext";
 import {
   CardPageContainer,
   CardPageBlock,
@@ -28,7 +27,7 @@ import {
 const CardPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { isLoggedIn } = useContext(ThemeToggleContext);
+
   const [card, setCard] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
@@ -70,12 +69,14 @@ const CardPage = () => {
     });
 
     setIsEditing(false);
+
     navigate("/");
   };
 
   const handleDelete = () => {
     if (window.confirm("Вы действительно хотите удалить эту задачу?")) {
       console.log("Удаление карточки:", id);
+
       navigate("/");
     }
   };
@@ -92,17 +93,16 @@ const CardPage = () => {
     }
   };
 
-  if (!isLoggedIn) {
-    navigate("/login");
-    return null;
-  }
-
   if (isLoading) {
     return (
       <>
         <Header />
         <CardPageContainer>
-          <CardPageBlock>Загрузка...</CardPageBlock>
+          <CardPageBlock>
+            <div style={{ textAlign: "center", padding: "40px" }}>
+              Загрузка карточки...
+            </div>
+          </CardPageBlock>
         </CardPageContainer>
       </>
     );
@@ -117,6 +117,9 @@ const CardPage = () => {
             <CardPageHeader>
               <CardPageTitle>Задача не найдена</CardPageTitle>
             </CardPageHeader>
+            <p style={{ color: "#94A6BE", marginBottom: "20px" }}>
+              Карточка с ID {id} не существует
+            </p>
             <Link to="/" className="btn-browse__close _btn-bg _hover01">
               На главную
             </Link>
@@ -132,7 +135,14 @@ const CardPage = () => {
       <CardPageContainer>
         <CardPageBlock>
           <CardPageHeader>
-            <CardPageTitle>{card.title}</CardPageTitle>
+            <div>
+              <CardPageTitle>{card.title}</CardPageTitle>
+              <p
+                style={{ fontSize: "14px", color: "#94A6BE", marginTop: "5px" }}
+              >
+                ID карточки: {id}
+              </p>
+            </div>
             <CardTheme
               $color={card.theme}
               className={`_${card.theme} _active-category`}
@@ -147,9 +157,17 @@ const CardPage = () => {
               {statuses.map((status) => (
                 <StatusButton
                   key={status}
-                  className={selectedStatus === status ? "_gray" : ""}
+                  className={`${
+                    selectedStatus === status ? "_gray _active" : ""
+                  } ${isEditing ? "editable" : ""}`}
+                  onClick={() => isEditing && setSelectedStatus(status)}
                   style={{
-                    display: selectedStatus === status ? "block" : "none",
+                    display:
+                      isEditing || selectedStatus === status
+                        ? "inline-block"
+                        : "none",
+                    cursor: isEditing ? "pointer" : "default",
+                    opacity: isEditing && selectedStatus !== status ? 0.4 : 1,
                   }}
                 >
                   {status}
@@ -181,6 +199,7 @@ const CardPage = () => {
             <CardTheme
               $color={card.theme}
               className={`_${card.theme} _active-category`}
+              style={{ cursor: "default" }}
             >
               <p className={`_${card.theme}`}>{card.category}</p>
             </CardTheme>
@@ -190,29 +209,31 @@ const CardPage = () => {
             <ButtonsWrapper>
               <TopButtons>
                 <ButtonGroup>
-                  <button className="btn-edit__edit _btn-bg _hover01">
-                    <Link to="#" onClick={handleSave}>
-                      Сохранить
-                    </Link>
+                  <button
+                    className="btn-edit__edit _btn-bg _hover01"
+                    onClick={handleSave}
+                  >
+                    Сохранить
                   </button>
-                  <button className="btn-edit__edit _btn-bor _hover03">
-                    <Link to="#" onClick={handleCancel}>
-                      Отменить
-                    </Link>
+                  <button
+                    className="btn-edit__edit _btn-bor _hover03"
+                    onClick={handleCancel}
+                  >
+                    Отменить
                   </button>
                   <button
                     className="btn-edit__delete _btn-bor _hover03"
                     id="btnDelete"
+                    onClick={handleDelete}
                   >
-                    <Link to="#" onClick={handleDelete}>
-                      Удалить задачу
-                    </Link>
+                    Удалить задачу
                   </button>
                 </ButtonGroup>
-                <BottomButton className="btn-edit__close _btn-bg _hover01">
-                  <Link to="#" onClick={() => setIsEditing(false)}>
-                    Закрыть
-                  </Link>
+                <BottomButton
+                  className="btn-edit__close _btn-bg _hover01"
+                  onClick={handleCancel}
+                >
+                  Закрыть
                 </BottomButton>
               </TopButtons>
             </ButtonsWrapper>
@@ -220,19 +241,24 @@ const CardPage = () => {
             <ButtonsWrapper>
               <TopButtons>
                 <ButtonGroup>
-                  <button className="btn-browse__edit _btn-bor _hover03">
-                    <Link to="#" onClick={() => setIsEditing(true)}>
-                      Редактировать задачу
-                    </Link>
+                  <button
+                    className="btn-browse__edit _btn-bor _hover03"
+                    onClick={() => setIsEditing(true)}
+                  >
+                    Редактировать задачу
                   </button>
-                  <button className="btn-browse__delete _btn-bor _hover03">
-                    <Link to="#" onClick={handleDelete}>
-                      Удалить задачу
-                    </Link>
+                  <button
+                    className="btn-browse__delete _btn-bor _hover03"
+                    onClick={handleDelete}
+                  >
+                    Удалить задачу
                   </button>
                 </ButtonGroup>
-                <BottomButton className="btn-browse__close _btn-bg _hover01">
-                  <Link to="/">Закрыть</Link>
+                <BottomButton
+                  className="btn-browse__close _btn-bg _hover01"
+                  onClick={handleCancel}
+                >
+                  Закрыть
                 </BottomButton>
               </TopButtons>
             </ButtonsWrapper>

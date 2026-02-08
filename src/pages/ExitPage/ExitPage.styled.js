@@ -65,3 +65,58 @@ export const ExitButtons = styled.div`
     gap: 10px;
   }
 `;
+
+export const ExitButtonYes = styled.button`
+  width: 153px;
+  height: 30px;
+  background-color: ${({ theme }) => theme.colors.primary};
+  border-radius: 4px;
+  border: none;
+  outline: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  line-height: 21px;
+  font-weight: 500;
+  letter-spacing: -0.14px;
+  color: #ffffff;
+  cursor: pointer;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.primaryHover};
+  }
+
+  @media (max-width: 375px) {
+    width: 100%;
+    height: 40px;
+  }
+`;
+
+export const ExitButtonNo = styled.button`
+  width: 153px;
+  height: 30px;
+  background-color: transparent;
+  border-radius: 4px;
+  border: 0.7px solid ${({ theme }) => theme.colors.primary};
+  outline: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  line-height: 21px;
+  font-weight: 500;
+  letter-spacing: -0.14px;
+  color: ${({ theme }) => theme.colors.primary};
+  cursor: pointer;
+
+  &:hover {
+    border-color: ${({ theme }) => theme.colors.primaryHover};
+    color: ${({ theme }) => theme.colors.primaryHover};
+  }
+
+  @media (max-width: 375px) {
+    width: 100%;
+    height: 40px;
+  }
+`;

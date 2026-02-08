@@ -1,6 +1,8 @@
 import { useState, useContext } from "react";
 import { Link } from "react-router-dom";
+import PopUser from "../popup/PopUser/PopUser";
 import { ThemeToggleContext } from "../../context/ThemeContext";
+import { AuthContext } from "../../context/AuthContext";
 import {
   HeaderWrapper,
   HeaderBlock,
@@ -8,18 +10,12 @@ import {
   HeaderNav,
   HeaderButton,
   UserButton,
-  PopupUserSet,
-  PopupUserName,
-  PopupUserEmail,
-  PopupThemeToggle,
-  PopupThemeCheckbox,
-  PopupLogoutButton,
 } from "./Header.styled";
 
 function Header() {
   const [isUserPopupOpen, setIsUserPopupOpen] = useState(false);
-  const { isDarkTheme, toggleTheme, isLoggedIn } =
-    useContext(ThemeToggleContext);
+  const { isDarkTheme, toggleTheme } = useContext(ThemeToggleContext);
+  const { isLoggedIn, handleLogout } = useContext(AuthContext);
 
   if (!isLoggedIn) {
     return null;
@@ -54,25 +50,12 @@ function Header() {
             </UserButton>
 
             {isUserPopupOpen && (
-              <PopupUserSet>
-                <PopupUserName>Ivan Ivanov</PopupUserName>
-                <PopupUserEmail>ivan.ivanov@gmail.com</PopupUserEmail>
-                <PopupThemeToggle>
-                  <p>Темная тема</p>
-                  <PopupThemeCheckbox
-                    type="checkbox"
-                    checked={isDarkTheme}
-                    onChange={toggleTheme}
-                  />
-                </PopupThemeToggle>
-                <PopupLogoutButton
-                  as={Link}
-                  to="/exit"
-                  onClick={() => setIsUserPopupOpen(false)}
-                >
-                  Выйти
-                </PopupLogoutButton>
-              </PopupUserSet>
+              <PopUser
+                onClose={() => setIsUserPopupOpen(false)}
+                onThemeToggle={toggleTheme}
+                isDarkTheme={isDarkTheme}
+                onLogout={handleLogout}
+              />
             )}
           </HeaderNav>
         </HeaderBlock>

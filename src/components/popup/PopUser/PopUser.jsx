@@ -15,7 +15,6 @@ const PopUser = ({ onClose, onThemeToggle, isDarkTheme }) => {
   const handleLogout = () => {
     localStorage.removeItem("isLoggedIn");
 
-    // Закрываем попап
     if (onClose) {
       onClose();
     }

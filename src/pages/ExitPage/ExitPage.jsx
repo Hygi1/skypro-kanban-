@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { ThemeToggleContext } from "../../context/ThemeContext";
+import { AuthContext } from "../../context/AuthContext";
 import {
   ExitContainer,
   ExitBlock,
@@ -12,7 +12,7 @@ import {
 } from "./ExitPage.styled";
 
 const ExitPage = () => {
-  const { handleLogout } = useContext(ThemeToggleContext);
+  const { handleLogout } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleExit = () => {

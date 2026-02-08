@@ -7,17 +7,20 @@ export const RegisterContainer = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: ${({ theme }) => theme.colors.background};
+  background-color: #151419;
+  padding: 20px;
 `;
 
 export const RegisterBlock = styled.div`
-  background-color: ${({ theme }) => theme.colors.cardBg};
+  display: block;
+  margin: 0 auto;
+  background-color: #20202c;
   max-width: 368px;
   width: 100%;
   padding: 50px 60px;
-  border-radius: ${({ theme }) => theme.borderRadius.large};
-  border: 0.7px solid ${({ theme }) => theme.colors.border};
-  box-shadow: ${({ theme }) => theme.shadows.card};
+  border-radius: 10px;
+  border: 0.7px solid #4e5566;
+  box-shadow: 0px 4px 67px -12px rgba(0, 0, 0, 0.13);
 `;
 
 export const RegisterTitle = styled.div`
@@ -25,11 +28,13 @@ export const RegisterTitle = styled.div`
   margin-bottom: 20px;
 
   h2 {
-    font-size: ${({ theme }) => theme.fonts.sizes.large};
+    text-align: center;
+    font-size: 20px;
     font-weight: 700;
     line-height: 30px;
     letter-spacing: -0.6px;
-    color: ${({ theme }) => theme.colors.text};
+    color: #ffffff;
+    margin-bottom: 20px;
   }
 `;
 
@@ -44,29 +49,44 @@ export const RegisterForm = styled.form`
 export const RegisterInput = styled.input`
   width: 100%;
   min-width: 100%;
-  border-radius: ${({ theme }) => theme.borderRadius.medium};
-  border: 0.7px solid ${({ theme }) => theme.colors.inputBorder};
+  border-radius: 8px;
+  background-color: transparent;
+  border: 0.7px solid rgba(148, 166, 190, 0.4);
   outline: none;
   padding: 10px 8px;
+  color: #ffffff;
+  font-family: "Roboto", sans-serif;
+  font-size: 14px;
   margin-bottom: 7px;
-  background-color: ${({ theme }) =>
-    theme.colors.cardBg === "#20202C" ? "transparent" : "inherit"};
-  color: ${({ theme }) => theme.colors.text};
+
+  &:last-of-type {
+    margin-bottom: 0;
+  }
 
   &::placeholder {
+    font-family: "Roboto", sans-serif;
     font-weight: 400;
-    font-size: ${({ theme }) => theme.fonts.sizes.regular};
+    font-size: 14px;
     line-height: 21px;
     letter-spacing: -0.28px;
-    color: ${({ theme }) => theme.colors.placeholder};
+    color: #94a6be;
+  }
+
+  &:focus {
+    border-color: #565eef;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
   }
 `;
 
 export const RegisterButton = styled.button`
   width: 100%;
   height: 30px;
-  background-color: ${({ theme }) => theme.colors.primary};
-  border-radius: ${({ theme }) => theme.borderRadius.small};
+  background-color: #565eef;
+  border-radius: 4px;
   margin-top: 20px;
   margin-bottom: 20px;
   border: none;
@@ -74,15 +94,21 @@ export const RegisterButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: ${({ theme }) => theme.fonts.sizes.regular};
+  font-size: 14px;
   line-height: 21px;
   font-weight: 500;
   letter-spacing: -0.14px;
-  color: ${({ theme }) => theme.colors.white};
+  color: #ffffff;
   cursor: pointer;
+  transition: background-color 0.3s;
 
-  &:hover {
-    background-color: ${({ theme }) => theme.colors.primaryHover};
+  &:hover:not(:disabled) {
+    background-color: #33399b;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
   }
 `;
 
@@ -91,15 +117,23 @@ export const RegisterLink = styled.div`
 
   p,
   a {
-    color: ${({ theme }) => theme.colors.textLight};
-    font-size: ${({ theme }) => theme.fonts.sizes.regular};
+    color: rgba(148, 166, 190, 0.4);
+    font-size: 14px;
     font-weight: 400;
     line-height: 150%;
     letter-spacing: -0.14px;
   }
 
+  p {
+    margin-bottom: 4px;
+  }
+
   a {
     text-decoration: underline;
-    color: ${({ theme }) => theme.colors.primary};
+    transition: color 0.2s;
+
+    &:hover {
+      color: #565eef;
+    }
   }
 `;
