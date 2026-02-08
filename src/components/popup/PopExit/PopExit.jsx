@@ -1,25 +1,44 @@
-function PopExit() {
-  return (
-    <div className="pop-exit" id="popExit">
-      <div className="pop-exit__container">
-        <div className="pop-exit__block">
-          <div className="pop-exit__ttl">
-            <h2>Выйти из аккаунта?</h2>
-          </div>
-          <form className="pop-exit__form" id="formExit" action="#">
-            <div className="pop-exit__form-group">
-              <button className="pop-exit__exit-yes _hover01" id="exitYes">
-                <a href="modal/signin.html">Да, выйти</a>
-              </button>
-              <button className="pop-exit__exit-no _hover03" id="exitNo">
-                <a href="main.html">Нет, остаться</a>
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-  );
-}
+import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../context/AuthContext";
+import {
+  ExitContainer,
+  ExitBlock,
+  ExitTitle,
+  ExitForm,
+  ExitButtons,
+  ExitButtonYes,
+  ExitButtonNo,
+} from "./ExitPage.styled";
 
-export default PopExit;
+const ExitPage = () => {
+  const { handleLogout } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const handleExit = () => {
+    handleLogout();
+    navigate("/login");
+  };
+
+  const handleCancel = () => {
+    navigate(-1);
+  };
+
+  return (
+    <ExitContainer>
+      <ExitBlock>
+        <ExitTitle>
+          <h2>Выйти из аккаунта?</h2>
+        </ExitTitle>
+        <ExitForm>
+          <ExitButtons>
+            <ExitButtonYes onClick={handleExit}>Да, выйти</ExitButtonYes>
+            <ExitButtonNo onClick={handleCancel}>Нет, остаться</ExitButtonNo>
+          </ExitButtons>
+        </ExitForm>
+      </ExitBlock>
+    </ExitContainer>
+  );
+};
+
+export default ExitPage;

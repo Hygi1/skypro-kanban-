@@ -1,5 +1,5 @@
 import { useState, useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import PopUser from "../popup/PopUser/PopUser";
 import { ThemeToggleContext } from "../../context/ThemeContext";
 import { AuthContext } from "../../context/AuthContext";
@@ -15,11 +15,17 @@ import {
 function Header() {
   const [isUserPopupOpen, setIsUserPopupOpen] = useState(false);
   const { isDarkTheme, toggleTheme } = useContext(ThemeToggleContext);
-  const { isLoggedIn, handleLogout } = useContext(AuthContext);
+  const { isLoggedIn } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   if (!isLoggedIn) {
     return null;
   }
+
+  const handleExitClick = () => {
+    navigate("/exit");
+    setIsUserPopupOpen(false);
+  };
 
   return (
     <HeaderWrapper>
@@ -51,10 +57,9 @@ function Header() {
 
             {isUserPopupOpen && (
               <PopUser
-                onClose={() => setIsUserPopupOpen(false)}
                 onThemeToggle={toggleTheme}
                 isDarkTheme={isDarkTheme}
-                onLogout={handleLogout}
+                onLogout={handleExitClick}
               />
             )}
           </HeaderNav>

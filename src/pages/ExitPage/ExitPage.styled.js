@@ -58,7 +58,8 @@ export const ExitButtons = styled.div`
   width: 100%;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  gap: 7px; /* Добавляем gap 7px между кнопками */
 
   @media (max-width: 375px) {
     flex-direction: column;

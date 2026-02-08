@@ -1,5 +1,4 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import {
   UserPopup,
   UserName,
@@ -9,19 +8,7 @@ import {
   LogoutButton,
 } from "./PopUser.styled";
 
-const PopUser = ({ onClose, onThemeToggle, isDarkTheme }) => {
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    localStorage.removeItem("isLoggedIn");
-
-    if (onClose) {
-      onClose();
-    }
-
-    navigate("/login");
-  };
-
+const PopUser = ({ onThemeToggle, isDarkTheme, onLogout }) => {
   return (
     <UserPopup>
       <UserName>Ivan Ivanov</UserName>
@@ -34,7 +21,7 @@ const PopUser = ({ onClose, onThemeToggle, isDarkTheme }) => {
           onChange={onThemeToggle}
         />
       </ThemeToggle>
-      <LogoutButton onClick={handleLogout}>Выйти</LogoutButton>
+      <LogoutButton onClick={onLogout}>Выйти</LogoutButton>
     </UserPopup>
   );
 };

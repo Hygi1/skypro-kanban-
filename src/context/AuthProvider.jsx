@@ -7,11 +7,13 @@ export const AuthProvider = ({ children }) => {
   });
 
   const handleLogin = () => {
+    console.log("Login");
     setIsLoggedIn(true);
     localStorage.setItem("isLoggedIn", "true");
   };
 
   const handleLogout = () => {
+    console.log("Logout");
     setIsLoggedIn(false);
     localStorage.removeItem("isLoggedIn");
   };
