@@ -8,11 +8,14 @@ import {
   LogoutButton,
 } from "./PopUser.styled";
 
-const PopUser = ({ onThemeToggle, isDarkTheme, onLogout }) => {
+const PopUser = ({ onThemeToggle, isDarkTheme, onLogout, user }) => {
+  const displayName = user?.name || user?.login || "Пользователь";
+  const displayLogin = user?.login || "";
+
   return (
     <UserPopup>
-      <UserName>Ivan Ivanov</UserName>
-      <UserEmail>ivan.ivanov@gmail.com</UserEmail>
+      <UserName>{displayName}</UserName>
+      <UserEmail>{displayLogin}</UserEmail>
       <ThemeToggle>
         <p>Темная тема</p>
         <ThemeCheckbox

@@ -1,6 +1,6 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { AuthContext } from "../../context/AuthContext";
+import { useAuth } from "../../context/use-auth.jsx";
 import {
   RegisterContainer,
   RegisterBlock,
@@ -13,86 +13,57 @@ import {
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
+    login: "",
     name: "",
-    email: "",
     password: "",
   });
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
-
-  const { isLoggedIn, handleLogin } = useContext(AuthContext);
+  const { isLoggedIn, register } = useAuth();
 
   useEffect(() => {
-    if (isLoggedIn) {
-      navigate("/");
-    }
+    if (isLoggedIn) navigate("/");
   }, [isLoggedIn, navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-
+    setFormData((prev) => ({ ...prev, [name]: value }));
     if (error) setError("");
   };
 
   const validateForm = () => {
-    const { name, email, password } = formData;
-
-    if (!name.trim()) {
-      return "Введите имя";
-    }
-
-    if (!email.trim()) {
-      return "Введите электронную почту";
-    }
-
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      return "Введите корректный email";
-    }
-
-    if (!password) {
-      return "Введите пароль";
-    }
-
-    if (password.length < 6) {
+    const { login, name, password } = formData;
+    if (!login.trim()) return "Введите логин";
+    if (!name.trim()) return "Введите имя";
+    if (!password) return "Введите пароль";
+    if (password.length < 6)
       return "Пароль должен содержать минимум 6 символов";
-    }
-
     return "";
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const validationError = validateForm();
     if (validationError) {
       setError(validationError);
       return;
     }
-
     setIsSubmitting(true);
     setError("");
-
     try {
-      console.log("Регистрация:", formData);
-
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      handleLogin();
-    } catch {
-      setError("Произошла ошибка при регистрации. Попробуйте еще раз.");
+      const result = await register(
+        formData.login,
+        formData.name,
+        formData.password
+      );
+      if (!result.success) setError(result.error);
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  if (isLoggedIn) {
-    return null;
-  }
+  if (isLoggedIn) return null;
 
   return (
     <RegisterContainer>
@@ -100,7 +71,6 @@ const RegisterPage = () => {
         <RegisterTitle>
           <h2>Регистрация</h2>
         </RegisterTitle>
-
         {error && (
           <div
             style={{
@@ -117,39 +87,37 @@ const RegisterPage = () => {
             {error}
           </div>
         )}
-
         <RegisterForm onSubmit={handleSubmit}>
           <RegisterInput
             type="text"
-            id="name"
+            name="login"
+            placeholder="Логин"
+            value={formData.login}
+            onChange={handleChange}
+            required
+            disabled={isSubmitting}
+            autoComplete="username"
+          />
+          <RegisterInput
+            type="text"
             name="name"
             placeholder="Имя"
             value={formData.name}
             onChange={handleChange}
             required
             disabled={isSubmitting}
-          />
-          <RegisterInput
-            type="email"
-            id="email"
-            name="email"
-            placeholder="Эл. почта"
-            value={formData.email}
-            onChange={handleChange}
-            required
-            disabled={isSubmitting}
+            autoComplete="name"
           />
           <RegisterInput
             type="password"
-            id="password"
             name="password"
             placeholder="Пароль"
             value={formData.password}
             onChange={handleChange}
             required
             disabled={isSubmitting}
+            autoComplete="new-password"
           />
-
           <RegisterButton
             type="submit"
             className="_hover01"
@@ -157,7 +125,6 @@ const RegisterPage = () => {
           >
             {isSubmitting ? "Регистрация..." : "Зарегистрироваться"}
           </RegisterButton>
-
           <RegisterLink>
             <p>Уже есть аккаунт?</p>
             <Link to="/login">Войдите здесь</Link>

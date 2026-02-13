@@ -1,6 +1,5 @@
-import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../../context/AuthContext";
+import { useAuth } from "../../context/use-auth.jsx";
 import {
   ExitContainer,
   ExitBlock,
@@ -12,16 +11,16 @@ import {
 } from "./ExitPage.styled";
 
 const ExitPage = () => {
-  const { handleLogout } = useContext(AuthContext);
+  const { logout } = useAuth();
   const navigate = useNavigate();
 
   const handleExit = () => {
-    handleLogout();
+    logout();
     navigate("/login");
   };
 
   const handleCancel = () => {
-    navigate("/");
+    navigate(-1);
   };
 
   return (

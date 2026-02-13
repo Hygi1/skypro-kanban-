@@ -18,7 +18,7 @@ const Calendar = ({
 }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDay, setSelectedDay] = useState(
-    selectedDate || new Date().getDate()
+    selectedDate ? selectedDate.getDate() : new Date().getDate()
   );
 
   const monthNames = [
@@ -121,6 +121,11 @@ const Calendar = ({
     return days;
   };
 
+  const formatSelectedDate = () => {
+    if (!selectedDate) return "";
+    return selectedDate.toLocaleDateString("ru-RU");
+  };
+
   return (
     <CalendarWrapper>
       <CalendarHeader>
@@ -165,8 +170,7 @@ const Calendar = ({
       {selectedDate && (
         <CalendarPeriod>
           <p>
-            Срок исполнения:{" "}
-            <span>{selectedDate.toLocaleDateString("ru-RU")}</span>
+            Срок исполнения: <span>{formatSelectedDate()}</span>
           </p>
         </CalendarPeriod>
       )}

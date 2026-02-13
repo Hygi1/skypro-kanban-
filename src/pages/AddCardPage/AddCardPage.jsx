@@ -1,8 +1,9 @@
-import { useState, useContext } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import Header from "../../components/Header/Header";
 import Calendar from "../../components/Calendar/Calendar";
-import { AuthContext } from "../../context/AuthContext";
+import { useAuth } from "../../context/use-auth.jsx";
+import { tasksAPI } from "../../services/tasks";
 import {
   AddCardContainer,
   AddCardBlock,
@@ -17,35 +18,56 @@ import {
   FormTextarea,
   CategoriesTitle,
   CategoriesContainer,
-  CategoryButtons,
   CategoryButton,
   SubmitButton,
+  ErrorMessage,
 } from "./AddCardPage.styled";
 
 const AddCardPage = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [selectedDate, setSelectedDate] = useState(null);
-  const [category, setCategory] = useState("orange");
+  const [category, setCategory] = useState("Research");
+  const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
-  const { isLoggedIn } = useContext(AuthContext);
+  const { isLoggedIn } = useAuth();
 
-  const handleSubmit = (e) => {
+  useEffect(() => {
+    if (!isLoggedIn) {
+      navigate("/login");
+    }
+  }, [isLoggedIn, navigate]);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!title.trim()) {
-      alert("Введите название задачи");
+      setError("Введите название задачи");
       return;
     }
 
-    console.log("Новая задача:", {
-      title,
-      description,
-      category,
-      date: selectedDate || new Date(),
-    });
+    try {
+      setIsSubmitting(true);
+      setError("");
 
-    navigate("/");
+      const taskData = {
+        title: title.trim(),
+        description: description.trim(),
+        topic: category,
+        status: "Без статуса",
+        date: selectedDate
+          ? selectedDate.toISOString()
+          : new Date().toISOString(),
+      };
+
+      await tasksAPI.createTask(taskData);
+      navigate("/");
+    } catch (err) {
+      setError(err.message || "Не удалось создать задачу");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleDateSelect = (date) => {
@@ -53,13 +75,12 @@ const AddCardPage = () => {
   };
 
   const categories = [
-    { id: "orange", label: "Web Design", color: "orange" },
-    { id: "green", label: "Research", color: "green" },
-    { id: "purple", label: "Copywriting", color: "purple" },
+    { id: "Web Design", label: "Web Design", color: "orange" },
+    { id: "Research", label: "Research", color: "green" },
+    { id: "Copywriting", label: "Copywriting", color: "purple" },
   ];
 
   if (!isLoggedIn) {
-    navigate("/login");
     return null;
   }
 
@@ -74,6 +95,8 @@ const AddCardPage = () => {
               &#10006;
             </CloseButton>
           </AddCardTitle>
+
+          {error && <ErrorMessage>{error}</ErrorMessage>}
 
           <form onSubmit={handleSubmit}>
             <FormWrapper>
@@ -90,6 +113,7 @@ const AddCardPage = () => {
                     onChange={(e) => setTitle(e.target.value)}
                     autoFocus
                     required
+                    disabled={isSubmitting}
                   />
                 </FormGroup>
 
@@ -102,6 +126,7 @@ const AddCardPage = () => {
                     placeholder="Введите описание задачи..."
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
+                    disabled={isSubmitting}
                   />
                 </FormGroup>
               </FormColumn>
@@ -109,7 +134,10 @@ const AddCardPage = () => {
               <FormColumn>
                 <div className="pop-new-card__calendar calendar">
                   <CategoriesTitle className="subttl">Даты</CategoriesTitle>
-                  <Calendar onDateSelect={handleDateSelect} />
+                  <Calendar
+                    onDateSelect={handleDateSelect}
+                    selectedDate={selectedDate}
+                  />
                 </div>
               </FormColumn>
             </FormWrapper>
@@ -125,6 +153,7 @@ const AddCardPage = () => {
                       category === cat.id ? "_active-category" : ""
                     }`}
                     onClick={() => setCategory(cat.id)}
+                    disabled={isSubmitting}
                   >
                     <p className={`_${cat.color}`}>{cat.label}</p>
                   </CategoryButton>
@@ -132,8 +161,12 @@ const AddCardPage = () => {
               </CategoriesContainer>
             </FormGroup>
 
-            <SubmitButton type="submit" className="_hover01">
-              Создать задачу
+            <SubmitButton
+              type="submit"
+              className="_hover01"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Создание..." : "Создать задачу"}
             </SubmitButton>
           </form>
         </AddCardBlock>

@@ -88,6 +88,7 @@ export const FormGroup = styled.div`
 
 export const FormLabel = styled.label`
   margin-bottom: 14px;
+  color: ${({ theme }) => theme.colors.text};
 `;
 
 export const FormInput = styled.input`
@@ -101,6 +102,7 @@ export const FormInput = styled.input`
   line-height: 1;
   letter-spacing: -0.14px;
   margin: 20px 0;
+  color: ${({ theme }) => theme.colors.text};
 
   &::placeholder {
     font-weight: 400;
@@ -108,6 +110,11 @@ export const FormInput = styled.input`
     line-height: 1px;
     color: #94a6be;
     letter-spacing: -0.14px;
+  }
+
+  body.dark-theme & {
+    background-color: ${({ theme }) => theme.colors.darkBg};
+    border-color: ${({ theme }) => theme.colors.darkBorder};
   }
 `;
 
@@ -124,6 +131,7 @@ export const FormTextarea = styled.textarea`
   margin-top: 14px;
   height: 200px;
   resize: vertical;
+  color: ${({ theme }) => theme.colors.text};
 
   &::placeholder {
     font-weight: 400;
@@ -132,10 +140,16 @@ export const FormTextarea = styled.textarea`
     color: #94a6be;
     letter-spacing: -0.14px;
   }
+
+  body.dark-theme & {
+    background-color: ${({ theme }) => theme.colors.darkBg};
+    border-color: ${({ theme }) => theme.colors.darkBorder};
+  }
 `;
 
 export const CategoriesTitle = styled.p`
   margin-bottom: 14px;
+  color: ${({ theme }) => theme.colors.text};
 `;
 
 export const CategoriesContainer = styled.div`
@@ -143,11 +157,6 @@ export const CategoriesContainer = styled.div`
   flex-wrap: nowrap;
   align-items: flex-start;
   justify-content: flex-start;
-`;
-
-export const CategoryButtons = styled.div`
-  display: flex;
-  gap: 7px;
 `;
 
 export const CategoryButton = styled.button`
@@ -181,4 +190,24 @@ export const SubmitButton = styled.button`
   color: #ffffff;
   float: right;
   cursor: pointer;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.primaryHover};
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+`;
+
+export const ErrorMessage = styled.div`
+  color: #ff6d00;
+  background-color: rgba(255, 109, 0, 0.1);
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  line-height: 1.4;
+  border-left: 4px solid #ff6d00;
 `;

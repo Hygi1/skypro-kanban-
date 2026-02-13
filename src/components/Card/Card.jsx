@@ -8,6 +8,7 @@ import {
   CardContent,
   CardTitle,
   CardDate,
+  CardActions,
 } from "./Card.styled";
 
 const Card = ({ card }) => {
@@ -18,7 +19,7 @@ const Card = ({ card }) => {
   const {
     id = "",
     title = "Без названия",
-    category = "Без категории",
+    category = "Research",
     theme = "gray",
     date = "",
   } = card;
@@ -30,7 +31,7 @@ const Card = ({ card }) => {
           <CardTheme $color={theme} className={`card__theme _${theme}`}>
             <p className={`_${theme}`}>{category}</p>
           </CardTheme>
-          <div style={{ marginLeft: "auto" }}>
+          <CardActions>
             <Link to={`/card/${id}`}>
               <CardButton>
                 <div></div>
@@ -38,7 +39,7 @@ const Card = ({ card }) => {
                 <div></div>
               </CardButton>
             </Link>
-          </div>
+          </CardActions>
         </CardGroup>
         <CardContent>
           <Link to={`/card/${id}`}>

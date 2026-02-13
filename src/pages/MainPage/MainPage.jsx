@@ -1,42 +1,72 @@
 import { useState, useEffect } from "react";
 import Header from "../../components/Header/Header";
 import Column from "../../components/Column/Column";
-import { cards } from "../../data";
-import { MainBlock, MainContent, MainColumn, Loading } from "./MainPage.styled";
+import { tasksAPI } from "../../services/tasks";
+import { useAuth } from "../../context/use-auth.jsx";
+import {
+  MainBlock,
+  MainContent,
+  MainColumn,
+  Loading,
+  ErrorMessage,
+} from "./MainPage.styled";
 
 const MainPage = () => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [cardsData, setCardsData] = useState([]);
+  const [tasks, setTasks] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const { isLoggedIn } = useAuth();
 
   useEffect(() => {
-    setTimeout(() => {
-      setCardsData(cards);
-      setIsLoading(false);
-    }, 2000);
-  }, []);
+    if (isLoggedIn) {
+      fetchTasks();
+    }
+  }, [isLoggedIn]);
 
-  const columns = [
-    {
-      title: "Без статуса",
-      cards: cardsData.filter((card) => card.status === "Без статуса"),
-    },
-    {
-      title: "Нужно сделать",
-      cards: cardsData.filter((card) => card.status === "Нужно сделать"),
-    },
-    {
-      title: "В работе",
-      cards: cardsData.filter((card) => card.status === "В работе"),
-    },
-    {
-      title: "Тестирование",
-      cards: cardsData.filter((card) => card.status === "Тестирование"),
-    },
-    {
-      title: "Готово",
-      cards: cardsData.filter((card) => card.status === "Готово"),
-    },
+  const fetchTasks = async () => {
+    try {
+      setLoading(true);
+      setError("");
+      const data = await tasksAPI.getTasks();
+      setTasks(data);
+    } catch (err) {
+      setError(err.message || "Не удалось загрузить задачи");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const statuses = [
+    "Без статуса",
+    "Нужно сделать",
+    "В работе",
+    "Тестирование",
+    "Готово",
   ];
+
+  const getCardsByStatus = (status) => {
+    return tasks.filter((task) => task.status === status);
+  };
+
+  const transformTaskToCard = (task) => {
+    let theme = "gray";
+    if (task.topic === "Web Design") theme = "orange";
+    if (task.topic === "Research") theme = "green";
+    if (task.topic === "Copywriting") theme = "purple";
+
+    return {
+      id: task._id,
+      title: task.title,
+      category: task.topic,
+      theme: theme,
+      date: new Date(task.date).toLocaleDateString("ru-RU"),
+      status: task.status,
+    };
+  };
+
+  if (!isLoggedIn) {
+    return null;
+  }
 
   return (
     <>
@@ -44,13 +74,18 @@ const MainPage = () => {
       <main className="main">
         <div className="container">
           <MainBlock>
-            {isLoading ? (
-              <Loading>Загрузка данных...</Loading>
+            <h1>Мой проект</h1>
+            {error && <ErrorMessage>{error}</ErrorMessage>}
+            {loading ? (
+              <Loading>Загрузка задач...</Loading>
             ) : (
               <MainContent>
-                {columns.map((column, index) => (
-                  <MainColumn key={index}>
-                    <Column title={column.title} cards={column.cards} />
+                {statuses.map((status) => (
+                  <MainColumn key={status}>
+                    <Column
+                      title={status}
+                      cards={getCardsByStatus(status).map(transformTaskToCard)}
+                    />
                   </MainColumn>
                 ))}
               </MainContent>

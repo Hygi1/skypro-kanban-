@@ -1,6 +1,6 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { AuthContext } from "../../context/AuthContext";
+import { useAuth } from "../../context/use-auth.jsx";
 import {
   LoginContainer,
   LoginBlock,
@@ -12,63 +12,47 @@ import {
 } from "./LoginPage.styled";
 
 const LoginPage = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [formData, setFormData] = useState({ login: "", password: "" });
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
-  const { isLoggedIn, handleLogin } = useContext(AuthContext);
+  const { isLoggedIn, login } = useAuth();
 
   useEffect(() => {
-    if (isLoggedIn) {
-      navigate("/");
-    }
+    if (isLoggedIn) navigate("/");
   }, [isLoggedIn, navigate]);
 
-  const validateForm = () => {
-    if (!email.trim()) {
-      return "Введите электронную почту";
-    }
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    if (error) setError("");
+  };
 
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      return "Введите корректный email";
-    }
-
-    if (!password) {
-      return "Введите пароль";
-    }
-
+  const validate = () => {
+    if (!formData.login) return "Введите логин";
+    if (!formData.password) return "Введите пароль";
+    if (formData.password.length < 6) return "Пароль не менее 6 символов";
     return "";
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const validationError = validateForm();
+    const validationError = validate();
     if (validationError) {
       setError(validationError);
       return;
     }
-
     setIsSubmitting(true);
     setError("");
-
     try {
-      console.log("Вход:", { email, password });
-
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      handleLogin();
-    } catch {
-      setError("Неверный email или пароль");
+      const result = await login(formData.login, formData.password);
+      if (!result.success) setError(result.error);
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  if (isLoggedIn) {
-    return null;
-  }
+  if (isLoggedIn) return null;
 
   return (
     <LoginContainer>
@@ -76,7 +60,6 @@ const LoginPage = () => {
         <LoginTitle>
           <h2>Вход</h2>
         </LoginTitle>
-
         {error && (
           <div
             style={{
@@ -86,36 +69,34 @@ const LoginPage = () => {
               borderRadius: "8px",
               marginBottom: "20px",
               fontSize: "14px",
-              lineHeight: "1.4",
               borderLeft: "4px solid #FF6D00",
             }}
           >
             {error}
           </div>
         )}
-
         <LoginForm onSubmit={handleSubmit}>
           <LoginInput
-            type="email"
-            placeholder="Эл. почта"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            type="text"
+            name="login"
+            placeholder="Логин"
+            value={formData.login}
+            onChange={handleChange}
             required
             disabled={isSubmitting}
+            autoComplete="username"
           />
           <LoginInput
             type="password"
+            name="password"
             placeholder="Пароль"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            value={formData.password}
+            onChange={handleChange}
             required
             disabled={isSubmitting}
+            autoComplete="current-password"
           />
-          <LoginButton
-            type="submit"
-            className="_hover01"
-            disabled={isSubmitting}
-          >
+          <LoginButton type="submit" disabled={isSubmitting}>
             {isSubmitting ? "Вход..." : "Войти"}
           </LoginButton>
           <LoginLink>

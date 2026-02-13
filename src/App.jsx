@@ -4,7 +4,7 @@ import { ThemeProvider } from "styled-components";
 import { lightTheme, darkTheme } from "./theme";
 import { GlobalStyles } from "./GlobalStyles";
 import { ThemeToggleProvider } from "./context/ThemeToggleProvider";
-import { AuthProvider } from "./context/AuthProvider";
+import { AuthProvider } from "./context/AuthContext.jsx";
 import AppRoutes from "./AppRoutes";
 import "./App.css";
 

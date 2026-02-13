@@ -2,7 +2,7 @@ import { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import PopUser from "../popup/PopUser/PopUser";
 import { ThemeToggleContext } from "../../context/ThemeContext";
-import { AuthContext } from "../../context/AuthContext";
+import { useAuth } from "../../context/use-auth.jsx";
 import {
   HeaderWrapper,
   HeaderBlock,
@@ -15,7 +15,7 @@ import {
 function Header() {
   const [isUserPopupOpen, setIsUserPopupOpen] = useState(false);
   const { isDarkTheme, toggleTheme } = useContext(ThemeToggleContext);
-  const { isLoggedIn } = useContext(AuthContext);
+  const { isLoggedIn, user } = useAuth();
   const navigate = useNavigate();
 
   if (!isLoggedIn) {
@@ -26,6 +26,8 @@ function Header() {
     navigate("/exit");
     setIsUserPopupOpen(false);
   };
+
+  const displayName = user?.name || user?.login || "Пользователь";
 
   return (
     <HeaderWrapper>
@@ -52,7 +54,7 @@ function Header() {
               onClick={() => setIsUserPopupOpen(!isUserPopupOpen)}
               className="_hover02"
             >
-              Ivan Ivanov
+              {displayName}
             </UserButton>
 
             {isUserPopupOpen && (
@@ -60,6 +62,7 @@ function Header() {
                 onThemeToggle={toggleTheme}
                 isDarkTheme={isDarkTheme}
                 onLogout={handleExitClick}
+                user={user}
               />
             )}
           </HeaderNav>

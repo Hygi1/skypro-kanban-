@@ -37,6 +37,10 @@ export const CardGroup = styled.div`
   justify-content: space-between;
 `;
 
+export const CardActions = styled.div`
+  margin-left: auto;
+`;
+
 export const CardTheme = styled.div`
   width: auto;
   height: 20px;
