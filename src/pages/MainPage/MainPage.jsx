@@ -74,7 +74,6 @@ const MainPage = () => {
       <main className="main">
         <div className="container">
           <MainBlock>
-            <h1>Мой проект</h1>
             {error && <ErrorMessage>{error}</ErrorMessage>}
             {loading ? (
               <Loading>Загрузка задач...</Loading>

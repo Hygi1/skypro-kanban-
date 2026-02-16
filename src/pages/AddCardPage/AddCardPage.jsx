@@ -41,16 +41,13 @@ const AddCardPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!title.trim()) {
       setError("Введите название задачи");
       return;
     }
-
     try {
       setIsSubmitting(true);
       setError("");
-
       const taskData = {
         title: title.trim(),
         description: description.trim(),
@@ -60,7 +57,6 @@ const AddCardPage = () => {
           ? selectedDate.toISOString()
           : new Date().toISOString(),
       };
-
       await tasksAPI.createTask(taskData);
       navigate("/");
     } catch (err) {
@@ -95,9 +91,7 @@ const AddCardPage = () => {
               &#10006;
             </CloseButton>
           </AddCardTitle>
-
           {error && <ErrorMessage>{error}</ErrorMessage>}
-
           <form onSubmit={handleSubmit}>
             <FormWrapper>
               <FormColumn>
@@ -116,7 +110,6 @@ const AddCardPage = () => {
                     disabled={isSubmitting}
                   />
                 </FormGroup>
-
                 <FormGroup>
                   <FormLabel htmlFor="textArea" className="subttl">
                     Описание задачи
@@ -130,7 +123,6 @@ const AddCardPage = () => {
                   />
                 </FormGroup>
               </FormColumn>
-
               <FormColumn>
                 <div className="pop-new-card__calendar calendar">
                   <CategoriesTitle className="subttl">Даты</CategoriesTitle>
@@ -141,7 +133,6 @@ const AddCardPage = () => {
                 </div>
               </FormColumn>
             </FormWrapper>
-
             <FormGroup>
               <CategoriesTitle className="subttl">Категория</CategoriesTitle>
               <CategoriesContainer className="categories__themes">
@@ -160,7 +151,6 @@ const AddCardPage = () => {
                 ))}
               </CategoriesContainer>
             </FormGroup>
-
             <SubmitButton
               type="submit"
               className="_hover01"

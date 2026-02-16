@@ -70,6 +70,7 @@ export const FormWrapper = styled.div`
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
+  gap: 21px;
   margin-bottom: 20px;
 
   @media (max-width: 660px) {

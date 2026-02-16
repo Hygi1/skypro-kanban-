@@ -95,6 +95,7 @@ export const ContentWrapper = styled.div`
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
+  gap: 21px;
   margin-bottom: 20px;
 
   @media (max-width: 660px) {
@@ -122,6 +123,7 @@ export const DescriptionTextarea = styled.textarea`
   letter-spacing: -0.14px;
   margin-top: 14px;
   height: 200px;
+  color: ${({ theme }) => theme.colors.text};
 
   &::placeholder {
     font-weight: 400;
@@ -137,6 +139,7 @@ export const DescriptionTextarea = styled.textarea`
 
   body.dark-theme & {
     background: ${({ theme }) => theme.colors.darkBg};
+    color: ${({ theme }) => theme.colors.white};
   }
 `;
 
