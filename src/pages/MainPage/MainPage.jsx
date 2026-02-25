@@ -1,7 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import Header from "../../components/Header/Header";
 import Column from "../../components/Column/Column";
-import { tasksAPI } from "../../services/tasks";
+import Modal from "../../components/Modal/Modal";
+import CardDetails from "../../components/CardDetails/CardDetails";
+import { useTasks } from "../../context/TasksContext";
 import { useAuth } from "../../context/use-auth.jsx";
 import {
   MainBlock,
@@ -11,44 +13,46 @@ import {
   ErrorMessage,
 } from "./MainPage.styled";
 
+const STATUSES = [
+  "Без статуса",
+  "Нужно сделать",
+  "В работе",
+  "Тестирование",
+  "Готово",
+];
+
 const MainPage = () => {
-  const [tasks, setTasks] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const { tasks, loading, error, fetchTasks } = useTasks();
   const { isLoggedIn } = useAuth();
+  const [selectedCardId, setSelectedCardId] = useState(null);
+  const [initialLoaded, setInitialLoaded] = useState(false);
 
   useEffect(() => {
-    if (isLoggedIn) {
-      fetchTasks();
+    if (isLoggedIn && !initialLoaded && !loading) {
+      fetchTasks().finally(() => setInitialLoaded(true));
     }
-  }, [isLoggedIn]);
+  }, [isLoggedIn, initialLoaded, loading, fetchTasks]);
 
-  const fetchTasks = async () => {
-    try {
-      setLoading(true);
-      setError("");
-      const data = await tasksAPI.getTasks();
-      setTasks(data);
-    } catch (err) {
-      setError(err.message || "Не удалось загрузить задачи");
-    } finally {
-      setLoading(false);
+  const handleCardClick = useCallback(
+    (cardId) => setSelectedCardId(cardId),
+    []
+  );
+  const closeModal = useCallback(() => setSelectedCardId(null), []);
+
+  const cardsByStatus = useMemo(() => {
+    const map = {};
+    STATUSES.forEach((status) => (map[status] = []));
+    if (Array.isArray(tasks)) {
+      tasks.forEach((task) => {
+        const status = task?.status || "Без статуса";
+        if (map[status]) map[status].push(task);
+      });
     }
-  };
+    return map;
+  }, [tasks]);
 
-  const statuses = [
-    "Без статуса",
-    "Нужно сделать",
-    "В работе",
-    "Тестирование",
-    "Готово",
-  ];
-
-  const getCardsByStatus = (status) => {
-    return tasks.filter((task) => task.status === status);
-  };
-
-  const transformTaskToCard = (task) => {
+  const transformTaskToCard = useCallback((task) => {
+    if (!task) return null;
     let theme = "gray";
     if (task.topic === "Web Design") theme = "orange";
     if (task.topic === "Research") theme = "green";
@@ -59,14 +63,12 @@ const MainPage = () => {
       title: task.title,
       category: task.topic,
       theme: theme,
-      date: new Date(task.date).toLocaleDateString("ru-RU"),
+      date: task.date ? new Date(task.date).toLocaleDateString("ru-RU") : "",
       status: task.status,
     };
-  };
+  }, []);
 
-  if (!isLoggedIn) {
-    return null;
-  }
+  if (!isLoggedIn) return null;
 
   return (
     <>
@@ -75,15 +77,20 @@ const MainPage = () => {
         <div className="container">
           <MainBlock>
             {error && <ErrorMessage>{error}</ErrorMessage>}
-            {loading ? (
+            {loading && tasks.length === 0 ? (
               <Loading>Загрузка задач...</Loading>
             ) : (
               <MainContent>
-                {statuses.map((status) => (
+                {STATUSES.map((status) => (
                   <MainColumn key={status}>
                     <Column
                       title={status}
-                      cards={getCardsByStatus(status).map(transformTaskToCard)}
+                      cards={
+                        cardsByStatus[status]
+                          ?.map(transformTaskToCard)
+                          .filter(Boolean) || []
+                      }
+                      onCardClick={handleCardClick}
                     />
                   </MainColumn>
                 ))}
@@ -92,6 +99,11 @@ const MainPage = () => {
           </MainBlock>
         </div>
       </main>
+      {selectedCardId && (
+        <Modal onClose={closeModal}>
+          <CardDetails cardId={selectedCardId} onClose={closeModal} />
+        </Modal>
+      )}
     </>
   );
 };

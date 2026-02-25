@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import styled from "styled-components";
 import Calendar from "../../Calendar/Calendar";
-import { tasksAPI } from "../../../services/tasks";
+import { useTasks } from "../../../context/TasksContext";
+import styled from "styled-components";
 
 const Content = styled.div`
   width: 100%;
@@ -119,26 +119,27 @@ const ThemeButton = styled.button`
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  background-color: ${({ $color, theme }) =>
+  background-color: ${({ $color }) =>
     $color === "orange"
-      ? theme.colors.orangeBg
+      ? "#FFE4C2"
       : $color === "green"
-      ? theme.colors.greenBg
+      ? "#B4FDD1"
       : $color === "purple"
-      ? theme.colors.purpleBg
-      : theme.colors.gray};
-  color: ${({ $color, theme }) =>
+      ? "#E9D4FF"
+      : "#94A6BE"};
+  color: ${({ $color }) =>
     $color === "orange"
-      ? theme.colors.orange
+      ? "#FF6D00"
       : $color === "green"
-      ? theme.colors.green
+      ? "#06B16E"
       : $color === "purple"
-      ? theme.colors.purple
-      : theme.colors.white};
+      ? "#9A48F1"
+      : "#FFFFFF"};
+  opacity: ${({ $isActive }) => ($isActive ? 1 : 0.4)};
+  transition: opacity 0.2s;
 
-  &.active {
+  &:hover {
     opacity: 1;
-    box-shadow: 0 0 0 2px ${({ theme }) => theme.colors.primary};
   }
 `;
 
@@ -156,7 +157,7 @@ const CreateButton = styled.button`
   transition: background-color 0.3s;
 
   &:hover:not(:disabled) {
-    background-color: ${({ theme }) => theme.colors.primaryHover};
+    background-color: #33399b;
   }
 
   &:disabled {
@@ -175,7 +176,8 @@ const ErrorMessage = styled.div`
   border-left: 4px solid #ff6d00;
 `;
 
-const PopNewCard = ({ onClose, onTaskCreated }) => {
+const PopNewCard = ({ onClose }) => {
+  const { createTask } = useTasks();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [selectedDate, setSelectedDate] = useState(null);
@@ -199,30 +201,22 @@ const PopNewCard = ({ onClose, onTaskCreated }) => {
       setError("Введите название задачи");
       return;
     }
-
     try {
       setIsSubmitting(true);
       setError("");
-
-      const taskData = {
+      const result = await createTask({
         title: title.trim(),
         description: description.trim(),
         topic: category,
-        status: "Без статуса",
         date: selectedDate
           ? selectedDate.toISOString()
           : new Date().toISOString(),
-      };
-
-      await tasksAPI.createTask(taskData);
-
-      if (onTaskCreated) {
-        onTaskCreated();
+      });
+      if (result.success) {
+        onClose();
+      } else {
+        setError(result.error);
       }
-
-      onClose();
-    } catch (err) {
-      setError(err.message || "Не удалось создать задачу");
     } finally {
       setIsSubmitting(false);
     }
@@ -232,9 +226,7 @@ const PopNewCard = ({ onClose, onTaskCreated }) => {
     <Content>
       <Title>Создание задачи</Title>
       <CloseButton onClick={onClose}>&#10006;</CloseButton>
-
       {error && <ErrorMessage>{error}</ErrorMessage>}
-
       <form onSubmit={handleSubmit}>
         <Wrap>
           <div style={{ flex: 1 }}>
@@ -270,7 +262,6 @@ const PopNewCard = ({ onClose, onTaskCreated }) => {
             />
           </CalendarWrapper>
         </Wrap>
-
         <Categories>
           <CategoriesTitle>Категория</CategoriesTitle>
           <Themes>
@@ -279,7 +270,7 @@ const PopNewCard = ({ onClose, onTaskCreated }) => {
                 key={cat.id}
                 type="button"
                 $color={cat.color}
-                className={category === cat.id ? "active" : ""}
+                $isActive={category === cat.id}
                 onClick={() => setCategory(cat.id)}
                 disabled={isSubmitting}
               >
@@ -288,7 +279,6 @@ const PopNewCard = ({ onClose, onTaskCreated }) => {
             ))}
           </Themes>
         </Categories>
-
         <CreateButton type="submit" disabled={isSubmitting}>
           {isSubmitting ? "Создание..." : "Создать задачу"}
         </CreateButton>

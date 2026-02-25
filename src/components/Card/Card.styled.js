@@ -41,36 +41,6 @@ export const CardActions = styled.div`
   margin-left: auto;
 `;
 
-export const CardTheme = styled.div`
-  width: auto;
-  height: 20px;
-  padding: 5px 14px;
-  border-radius: 18px;
-  background-color: ${({ $color, theme }) =>
-    $color === "orange"
-      ? theme.colors.orangeBg
-      : $color === "green"
-      ? theme.colors.greenBg
-      : $color === "purple"
-      ? theme.colors.purpleBg
-      : theme.colors.gray};
-
-  p {
-    font-size: 10px;
-    font-weight: 600;
-    line-height: 10px;
-    color: ${({ $color, theme }) =>
-      $color === "orange"
-        ? theme.colors.orange
-        : $color === "green"
-        ? theme.colors.green
-        : $color === "purple"
-        ? theme.colors.purple
-        : theme.colors.white};
-    text-transform: uppercase;
-  }
-`;
-
 export const CardButton = styled.div`
   width: 24px;
   height: 24px;

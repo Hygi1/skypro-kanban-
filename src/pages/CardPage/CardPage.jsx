@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import Header from "../../components/Header/Header";
 import Calendar from "../../components/Calendar/Calendar";
+import CategoryBadge from "../../components/CategoryBadge/CategoryBadge";
 import { useAuth } from "../../context/use-auth.jsx";
 import { tasksAPI } from "../../services/tasks";
 import {
@@ -9,7 +10,6 @@ import {
   CardPageBlock,
   CardPageHeader,
   CardPageTitle,
-  CardTheme,
   StatusContainer,
   StatusTitle,
   StatusButtons,
@@ -140,19 +140,6 @@ const CardPage = () => {
     setSelectedDate(date);
   };
 
-  const getThemeColor = (topic) => {
-    switch (topic) {
-      case "Web Design":
-        return "orange";
-      case "Research":
-        return "green";
-      case "Copywriting":
-        return "purple";
-      default:
-        return "gray";
-    }
-  };
-
   if (!isLoggedIn) {
     return null;
   }
@@ -223,14 +210,7 @@ const CardPage = () => {
                 ID карточки: {id}
               </p>
             </div>
-            {!isEditing && (
-              <CardTheme
-                $color={getThemeColor(category)}
-                className={`_${getThemeColor(category)} _active-category`}
-              >
-                <p className={`_${getThemeColor(category)}`}>{category}</p>
-              </CardTheme>
-            )}
+            {!isEditing && <CategoryBadge category={category} />}
           </CardPageHeader>
 
           <StatusContainer>
@@ -282,13 +262,7 @@ const CardPage = () => {
 
           <CategoryContainer>
             <CategoryTitle className="subttl">Категория</CategoryTitle>
-            <CardTheme
-              $color={getThemeColor(category)}
-              className={`_${getThemeColor(category)} _active-category`}
-              style={{ cursor: "default" }}
-            >
-              <p className={`_${getThemeColor(category)}`}>{category}</p>
-            </CardTheme>
+            <CategoryBadge category={category} />
           </CategoryContainer>
 
           {isEditing ? (

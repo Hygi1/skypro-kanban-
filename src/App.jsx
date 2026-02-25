@@ -5,6 +5,7 @@ import { lightTheme, darkTheme } from "./theme";
 import { GlobalStyles } from "./GlobalStyles";
 import { ThemeToggleProvider } from "./context/ThemeToggleProvider";
 import { AuthProvider } from "./context/AuthContext.jsx";
+import { TasksProvider } from "./context/TasksContext"; // добавить импорт
 import AppRoutes from "./AppRoutes";
 import "./App.css";
 
@@ -41,16 +42,19 @@ function App() {
 
   return (
     <AuthProvider>
-      {" "}
       <ThemeToggleProvider toggleTheme={toggleTheme}>
-        <ThemeProvider theme={currentTheme}>
-          <GlobalStyles />
-          <BrowserRouter>
-            <div className="wrapper">
-              <AppRoutes />
-            </div>
-          </BrowserRouter>
-        </ThemeProvider>
+        <TasksProvider>
+          {" "}
+          {/* добавить обёртку */}
+          <ThemeProvider theme={currentTheme}>
+            <GlobalStyles />
+            <BrowserRouter>
+              <div className="wrapper">
+                <AppRoutes />
+              </div>
+            </BrowserRouter>
+          </ThemeProvider>
+        </TasksProvider>
       </ThemeToggleProvider>
     </AuthProvider>
   );

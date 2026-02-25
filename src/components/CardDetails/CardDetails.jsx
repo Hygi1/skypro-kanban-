@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
-import Calendar from "../../Calendar/Calendar";
+import { useState, useEffect } from "react";
+import { useTasks } from "../../context/TasksContext";
+import Calendar from "../Calendar/Calendar";
 import CategoryBadge from "../CategoryBadge/CategoryBadge";
-import { useTasks } from "../../../context/TasksContext";
 import styled from "styled-components";
 
-const Content = styled.div`
+const Container = styled.div`
   width: 100%;
 `;
 
@@ -174,7 +174,7 @@ const ErrorMessage = styled.div`
   border-left: 4px solid #ff6d00;
 `;
 
-const PopBrowse = ({ cardId, onClose }) => {
+const CardDetails = ({ cardId, onClose }) => {
   const { tasks, updateTask, deleteTask } = useTasks();
   const [card, setCard] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -261,7 +261,7 @@ const PopBrowse = ({ cardId, onClose }) => {
   if (!card) return null;
 
   return (
-    <Content>
+    <Container>
       {error && <ErrorMessage>{error}</ErrorMessage>}
       <Header>
         {isEditing ? (
@@ -368,8 +368,8 @@ const PopBrowse = ({ cardId, onClose }) => {
           Закрыть
         </button>
       </ButtonGroup>
-    </Content>
+    </Container>
   );
 };
 
-export default PopBrowse;
+export default CardDetails;

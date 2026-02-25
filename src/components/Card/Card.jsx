@@ -1,9 +1,10 @@
+import React from "react";
 import { Link } from "react-router-dom";
+import CategoryBadge from "../CategoryBadge/CategoryBadge";
 import {
   CardItem,
   CardWrapper,
   CardGroup,
-  CardTheme,
   CardButton,
   CardContent,
   CardTitle,
@@ -11,28 +12,23 @@ import {
   CardActions,
 } from "./Card.styled";
 
-const Card = ({ card }) => {
-  if (!card) {
-    return null;
-  }
+const Card = ({ card, onClick }) => {
+  if (!card) return null;
 
   const {
     id = "",
     title = "Без названия",
     category = "Research",
-    theme = "gray",
     date = "",
   } = card;
 
   return (
-    <CardItem>
+    <CardItem onClick={onClick}>
       <CardWrapper>
         <CardGroup>
-          <CardTheme $color={theme} className={`card__theme _${theme}`}>
-            <p className={`_${theme}`}>{category}</p>
-          </CardTheme>
+          <CategoryBadge category={category} />
           <CardActions>
-            <Link to={`/card/${id}`}>
+            <Link to={`/card/${id}`} onClick={(e) => e.stopPropagation()}>
               <CardButton>
                 <div></div>
                 <div></div>
@@ -42,7 +38,7 @@ const Card = ({ card }) => {
           </CardActions>
         </CardGroup>
         <CardContent>
-          <Link to={`/card/${id}`}>
+          <Link to={`/card/${id}`} onClick={(e) => e.stopPropagation()}>
             <CardTitle>{title}</CardTitle>
           </Link>
           <CardDate>
