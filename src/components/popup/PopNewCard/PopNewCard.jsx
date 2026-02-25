@@ -1,7 +1,13 @@
 import React, { useState } from "react";
+<<<<<<< HEAD
 import Calendar from "../../Calendar/Calendar";
 import { useTasks } from "../../../context/TasksContext";
 import styled from "styled-components";
+=======
+import styled from "styled-components";
+import Calendar from "../../Calendar/Calendar";
+import { tasksAPI } from "../../../services/tasks";
+>>>>>>> cf2a5344cfce1310c363e1a123997b1f0b6bb00e
 
 const Content = styled.div`
   width: 100%;
@@ -119,6 +125,7 @@ const ThemeButton = styled.button`
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
+<<<<<<< HEAD
   background-color: ${({ $color }) =>
     $color === "orange"
       ? "#FFE4C2"
@@ -140,6 +147,28 @@ const ThemeButton = styled.button`
 
   &:hover {
     opacity: 1;
+=======
+  background-color: ${({ $color, theme }) =>
+    $color === "orange"
+      ? theme.colors.orangeBg
+      : $color === "green"
+      ? theme.colors.greenBg
+      : $color === "purple"
+      ? theme.colors.purpleBg
+      : theme.colors.gray};
+  color: ${({ $color, theme }) =>
+    $color === "orange"
+      ? theme.colors.orange
+      : $color === "green"
+      ? theme.colors.green
+      : $color === "purple"
+      ? theme.colors.purple
+      : theme.colors.white};
+
+  &.active {
+    opacity: 1;
+    box-shadow: 0 0 0 2px ${({ theme }) => theme.colors.primary};
+>>>>>>> cf2a5344cfce1310c363e1a123997b1f0b6bb00e
   }
 `;
 
@@ -157,7 +186,11 @@ const CreateButton = styled.button`
   transition: background-color 0.3s;
 
   &:hover:not(:disabled) {
+<<<<<<< HEAD
     background-color: #33399b;
+=======
+    background-color: ${({ theme }) => theme.colors.primaryHover};
+>>>>>>> cf2a5344cfce1310c363e1a123997b1f0b6bb00e
   }
 
   &:disabled {
@@ -176,8 +209,12 @@ const ErrorMessage = styled.div`
   border-left: 4px solid #ff6d00;
 `;
 
+<<<<<<< HEAD
 const PopNewCard = ({ onClose }) => {
   const { createTask } = useTasks();
+=======
+const PopNewCard = ({ onClose, onTaskCreated }) => {
+>>>>>>> cf2a5344cfce1310c363e1a123997b1f0b6bb00e
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [selectedDate, setSelectedDate] = useState(null);
@@ -201,6 +238,7 @@ const PopNewCard = ({ onClose }) => {
       setError("Введите название задачи");
       return;
     }
+<<<<<<< HEAD
     try {
       setIsSubmitting(true);
       setError("");
@@ -217,6 +255,32 @@ const PopNewCard = ({ onClose }) => {
       } else {
         setError(result.error);
       }
+=======
+
+    try {
+      setIsSubmitting(true);
+      setError("");
+
+      const taskData = {
+        title: title.trim(),
+        description: description.trim(),
+        topic: category,
+        status: "Без статуса",
+        date: selectedDate
+          ? selectedDate.toISOString()
+          : new Date().toISOString(),
+      };
+
+      await tasksAPI.createTask(taskData);
+
+      if (onTaskCreated) {
+        onTaskCreated();
+      }
+
+      onClose();
+    } catch (err) {
+      setError(err.message || "Не удалось создать задачу");
+>>>>>>> cf2a5344cfce1310c363e1a123997b1f0b6bb00e
     } finally {
       setIsSubmitting(false);
     }
@@ -226,7 +290,13 @@ const PopNewCard = ({ onClose }) => {
     <Content>
       <Title>Создание задачи</Title>
       <CloseButton onClick={onClose}>&#10006;</CloseButton>
+<<<<<<< HEAD
       {error && <ErrorMessage>{error}</ErrorMessage>}
+=======
+
+      {error && <ErrorMessage>{error}</ErrorMessage>}
+
+>>>>>>> cf2a5344cfce1310c363e1a123997b1f0b6bb00e
       <form onSubmit={handleSubmit}>
         <Wrap>
           <div style={{ flex: 1 }}>
@@ -262,6 +332,10 @@ const PopNewCard = ({ onClose }) => {
             />
           </CalendarWrapper>
         </Wrap>
+<<<<<<< HEAD
+=======
+
+>>>>>>> cf2a5344cfce1310c363e1a123997b1f0b6bb00e
         <Categories>
           <CategoriesTitle>Категория</CategoriesTitle>
           <Themes>
@@ -270,7 +344,11 @@ const PopNewCard = ({ onClose }) => {
                 key={cat.id}
                 type="button"
                 $color={cat.color}
+<<<<<<< HEAD
                 $isActive={category === cat.id}
+=======
+                className={category === cat.id ? "active" : ""}
+>>>>>>> cf2a5344cfce1310c363e1a123997b1f0b6bb00e
                 onClick={() => setCategory(cat.id)}
                 disabled={isSubmitting}
               >
@@ -279,6 +357,10 @@ const PopNewCard = ({ onClose }) => {
             ))}
           </Themes>
         </Categories>
+<<<<<<< HEAD
+=======
+
+>>>>>>> cf2a5344cfce1310c363e1a123997b1f0b6bb00e
         <CreateButton type="submit" disabled={isSubmitting}>
           {isSubmitting ? "Создание..." : "Создать задачу"}
         </CreateButton>
