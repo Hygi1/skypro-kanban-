@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import CategoryBadge from "../CategoryBadge/CategoryBadge";
 import {
   CardItem,
@@ -22,25 +21,23 @@ const Card = ({ card, onClick }) => {
     date = "",
   } = card;
 
+  const handleClick = () => onClick(id);
+
   return (
-    <CardItem onClick={onClick}>
+    <CardItem onClick={handleClick}>
       <CardWrapper>
         <CardGroup>
           <CategoryBadge category={category} />
           <CardActions>
-            <Link to={`/card/${id}`} onClick={(e) => e.stopPropagation()}>
-              <CardButton>
-                <div></div>
-                <div></div>
-                <div></div>
-              </CardButton>
-            </Link>
+            <CardButton>
+              <div></div>
+              <div></div>
+              <div></div>
+            </CardButton>
           </CardActions>
         </CardGroup>
         <CardContent>
-          <Link to={`/card/${id}`} onClick={(e) => e.stopPropagation()}>
-            <CardTitle>{title}</CardTitle>
-          </Link>
+          <CardTitle>{title}</CardTitle>
           <CardDate>
             <svg
               xmlns="http://www.w3.org/2000/svg"

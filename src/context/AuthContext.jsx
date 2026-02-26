@@ -21,9 +21,10 @@ export const AuthProvider = ({ children }) => {
     try {
       setLoading(true);
       const data = await authAPI.login(login, password);
+      const { password: _, ...safeUser } = data.user;
       localStorage.setItem("token", data.user.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
-      setUser(data.user);
+      localStorage.setItem("user", JSON.stringify(safeUser));
+      setUser(safeUser);
       setIsLoggedIn(true);
       return { success: true };
     } catch (error) {
@@ -40,9 +41,10 @@ export const AuthProvider = ({ children }) => {
     try {
       setLoading(true);
       const data = await authAPI.register(login, name, password);
+      const { password: _, ...safeUser } = data.user;
       localStorage.setItem("token", data.user.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
-      setUser(data.user);
+      localStorage.setItem("user", JSON.stringify(safeUser));
+      setUser(safeUser);
       setIsLoggedIn(true);
       return { success: true };
     } catch (error) {

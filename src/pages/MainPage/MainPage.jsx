@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Header from "../../components/Header/Header";
 import Column from "../../components/Column/Column";
 import Modal from "../../components/Modal/Modal";
@@ -11,6 +11,7 @@ import {
   MainColumn,
   Loading,
   ErrorMessage,
+  EmptyMessage,
 } from "./MainPage.styled";
 
 const STATUSES = [
@@ -33,11 +34,8 @@ const MainPage = () => {
     }
   }, [isLoggedIn, initialLoaded, loading, fetchTasks]);
 
-  const handleCardClick = useCallback(
-    (cardId) => setSelectedCardId(cardId),
-    []
-  );
-  const closeModal = useCallback(() => setSelectedCardId(null), []);
+  const handleCardClick = (cardId) => setSelectedCardId(cardId);
+  const closeModal = () => setSelectedCardId(null);
 
   const cardsByStatus = useMemo(() => {
     const map = {};
@@ -51,7 +49,7 @@ const MainPage = () => {
     return map;
   }, [tasks]);
 
-  const transformTaskToCard = useCallback((task) => {
+  const transformTaskToCard = (task) => {
     if (!task) return null;
     let theme = "gray";
     if (task.topic === "Web Design") theme = "orange";
@@ -66,9 +64,11 @@ const MainPage = () => {
       date: task.date ? new Date(task.date).toLocaleDateString("ru-RU") : "",
       status: task.status,
     };
-  }, []);
+  };
 
   if (!isLoggedIn) return null;
+
+  const hasTasks = tasks.length > 0;
 
   return (
     <>
@@ -77,8 +77,10 @@ const MainPage = () => {
         <div className="container">
           <MainBlock>
             {error && <ErrorMessage>{error}</ErrorMessage>}
-            {loading && tasks.length === 0 ? (
+            {loading ? (
               <Loading>Загрузка задач...</Loading>
+            ) : !hasTasks ? (
+              <EmptyMessage>Новых задач нет</EmptyMessage>
             ) : (
               <MainContent>
                 {STATUSES.map((status) => (

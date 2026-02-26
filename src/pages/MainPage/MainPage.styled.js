@@ -34,3 +34,9 @@ export const ErrorMessage = styled.div`
   line-height: 1.4;
   border-left: 4px solid #ff6d00;
 `;
+export const EmptyMessage = styled.div`
+  text-align: center;
+  padding: 50px;
+  font-size: 18px;
+  color: #94a6be;
+`;
