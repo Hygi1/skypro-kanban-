@@ -28,8 +28,8 @@ export const TasksProvider = ({ children }) => {
   const createTask = async (taskData) => {
     try {
       setLoading(true);
-      await tasksAPI.createTask(taskData);
-      await fetchTasks();
+      const updatedTasks = await tasksAPI.createTask(taskData);
+      setTasks(updatedTasks);
       return { success: true };
     } catch (err) {
       return { success: false, error: err.message };
@@ -41,8 +41,8 @@ export const TasksProvider = ({ children }) => {
   const updateTask = async (id, taskData) => {
     try {
       setLoading(true);
-      await tasksAPI.updateTask(id, taskData);
-      await fetchTasks();
+      const updatedTasks = await tasksAPI.updateTask(id, taskData);
+      setTasks(updatedTasks);
       return { success: true };
     } catch (err) {
       return { success: false, error: err.message };
@@ -54,8 +54,8 @@ export const TasksProvider = ({ children }) => {
   const deleteTask = async (id) => {
     try {
       setLoading(true);
-      await tasksAPI.deleteTask(id);
-      await fetchTasks();
+      const updatedTasks = await tasksAPI.deleteTask(id);
+      setTasks(updatedTasks);
       return { success: true };
     } catch (err) {
       return { success: false, error: err.message };
