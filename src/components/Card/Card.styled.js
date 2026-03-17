@@ -10,24 +10,21 @@ export const CardItem = styled.div`
 export const CardWrapper = styled.div`
   width: 220px;
   height: 130px;
-  background-color: ${({ theme }) => theme.colors.white};
+  background-color: ${({ theme }) => theme.colors.cardBg};
   border-radius: ${({ theme }) => theme.borderRadius.large};
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  justify-content: stretch;
   padding: 15px 13px 19px;
-  box-shadow: ${({ theme }) => theme.shadows.card};
   transition: all 0.3s ease;
+  border: 1px solid transparent;
 
   &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    border-color: ${({ theme }) => theme.colors.borderGray};
+    box-shadow: ${({ theme }) => theme.shadows.card};
   }
 
   body.dark-theme & {
     background-color: ${({ theme }) => theme.colors.darkCardBg};
-    border: 0.7px solid ${({ theme }) => theme.colors.darkBorder};
   }
 `;
 
@@ -40,42 +37,8 @@ export const CardGroup = styled.div`
   justify-content: space-between;
 `;
 
-export const CardTheme = styled.div`
-  width: auto;
-  height: 20px;
-  padding: ${({ theme }) => `${theme.spacing.xs} 14px`};
-  border-radius: ${({ theme }) => theme.borderRadius.pill};
-  background-color: ${({ $color, theme }) => {
-    switch ($color) {
-      case "orange":
-        return theme.colors.orangeBg;
-      case "green":
-        return theme.colors.greenBg;
-      case "purple":
-        return theme.colors.purpleBg;
-      default:
-        return theme.colors.gray;
-    }
-  }};
-
-  p {
-    font-size: ${({ theme }) => theme.fonts.sizes.small};
-    font-weight: 600;
-    line-height: 10px;
-    color: ${({ $color, theme }) => {
-      switch ($color) {
-        case "orange":
-          return theme.colors.orange;
-        case "green":
-          return theme.colors.green;
-        case "purple":
-          return theme.colors.purple;
-        default:
-          return theme.colors.white;
-      }
-    }};
-    text-transform: uppercase;
-  }
+export const CardActions = styled.div`
+  margin-left: auto;
 `;
 
 export const CardButton = styled.div`
@@ -105,27 +68,20 @@ export const CardContent = styled.div`
   height: 64px;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
   justify-content: space-between;
-  width: 100%;
 `;
 
 export const CardTitle = styled.h3`
-  font-size: ${({ theme }) => theme.fonts.sizes.regular};
+  font-size: 14px;
   font-weight: 500;
   line-height: 18px;
-  color: ${({ theme }) => theme.colors.black};
-  margin-bottom: ${({ theme }) => theme.spacing.sm};
+  color: ${({ theme }) => theme.colors.text};
+  margin-bottom: 10px;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
-  width: 100%;
-
-  body.dark-theme & {
-    color: ${({ theme }) => theme.colors.white};
-  }
 
   a {
     color: inherit;
@@ -140,13 +96,11 @@ export const CardTitle = styled.h3`
 export const CardDate = styled.div`
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  width: 100%;
+  gap: 6px;
 
   svg {
     width: 13px;
     height: 13px;
-    flex-shrink: 0;
 
     path {
       stroke: ${({ theme }) => theme.colors.gray};
@@ -154,8 +108,7 @@ export const CardDate = styled.div`
   }
 
   p {
-    margin-left: ${({ theme }) => theme.spacing.xs};
-    font-size: ${({ theme }) => theme.fonts.sizes.small};
+    font-size: 10px;
     line-height: 13px;
     color: ${({ theme }) => theme.colors.gray};
     letter-spacing: 0.2px;

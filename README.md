@@ -1,16 +1,33 @@
-# React + Vite
+Kanban-доска на React
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Проект представляет собой приложение для управления задачами в стиле Kanban. Реализована полная функциональность: авторизация, регистрация, создание, редактирование и удаление задач, смена темы, модальные окна и адаптивный дизайн.
 
-Currently, two official plugins are available:
+ Функциональность
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Основные возможности
+- Авторизация и регистрация пользователей через API.
+- Просмотр задач в колонках по статусам: «Без статуса», «Нужно сделать», «В работе», «Тестирование», «Готово».
+- Создание задачи – модальное окно с формой (название, описание, дата, категория).
+- Редактирование задачи – открывается в модальном окне при клике на карточку.
+- Удаление задачи с подтверждением.
+- Выход из аккаунта– модальное окно с подтверждением.
 
-## React Compiler
+Дополнительные фичи
+- Смена темы (светлая/тёмная) – реализована через `ThemeProvider` и контекст.
+- Всплывающие уведомления (toasts) с помощью библиотеки `react-toastify` – вместо стандартных блоков ошибок.
+- Анимированный спиннер загрузки вместо текста.
+- Сообщение «Новых задач нет» при пустом списке.
+- Страница 404, стилизованная в общем дизайне.
+- Защита от отправки пустых полей и полей с пробелами.
+- Обработка ошибок сервера – сообщения отображаются в тостах.
+- Сохранение сессии после перезагрузки (токен и данные пользователя в localStorage, пароль не сохраняется).
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+ Технологии
 
-## Expanding the ESLint configuration
+- React (Vite)
+- React Router
+- Styled Components
+- Context API
+- React Toastify
+- Работа с REST API
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.

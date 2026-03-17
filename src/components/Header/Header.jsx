@@ -1,4 +1,11 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import PopUser from "../popup/PopUser/PopUser";
+import PopNewCard from "../popup/PopNewCard/PopNewCard";
+import Modal from "../Modal/Modal";
+import ExitModal from "../ExitModal/ExitModal";
+import { ThemeToggleContext } from "../../context/ThemeContext";
+import { useAuth } from "../../context/use-auth.jsx";
 import {
   HeaderWrapper,
   HeaderBlock,
@@ -6,110 +13,88 @@ import {
   HeaderNav,
   HeaderButton,
   UserButton,
-  UserPopup,
-  UserName,
-  UserEmail,
-  ThemeToggle,
-  ThemeCheckbox,
-  LogoutButton,
 } from "./Header.styled";
 
 function Header() {
   const [isUserPopupOpen, setIsUserPopupOpen] = useState(false);
+  const [isNewCardModalOpen, setIsNewCardModalOpen] = useState(false);
+  const [isExitModalOpen, setIsExitModalOpen] = useState(false);
+  const { isDarkTheme, toggleTheme } = useContext(ThemeToggleContext);
+  const { isLoggedIn, user, logout } = useAuth();
+  const navigate = useNavigate();
 
-  const [isDarkTheme, setIsDarkTheme] = useState(() => {
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme) {
-      return savedTheme === "dark";
-    }
-    if (typeof window !== "undefined") {
-      return document.body.classList.contains("dark-theme");
-    }
-    return false;
-  });
+  if (!isLoggedIn) return null;
 
-  const popupRef = useRef(null);
-
-  useEffect(() => {
-    if (isDarkTheme) {
-      document.body.classList.add("dark-theme");
-    } else {
-      document.body.classList.remove("dark-theme");
-    }
-    localStorage.setItem("theme", isDarkTheme ? "dark" : "light");
-  }, [isDarkTheme]);
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (popupRef.current && !popupRef.current.contains(event.target)) {
-        setIsUserPopupOpen(false);
-      }
-    };
-
-    if (isUserPopupOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [isUserPopupOpen]);
-
-  const toggleUserPopup = () => {
-    setIsUserPopupOpen(!isUserPopupOpen);
-  };
-
-  const handleThemeToggle = () => {
-    setIsDarkTheme(!isDarkTheme);
-  };
-
-  const handleLogoutClick = (e) => {
-    e.preventDefault();
+  const handleExitClick = () => {
+    setIsExitModalOpen(true);
     setIsUserPopupOpen(false);
-    window.location.hash = "#popExit";
   };
+
+  const handleLogoutConfirm = () => {
+    logout();
+    setIsExitModalOpen(false);
+    navigate("/login");
+  };
+
+  const openNewCardModal = () => setIsNewCardModalOpen(true);
+  const closeNewCardModal = () => setIsNewCardModalOpen(false);
+  const closeExitModal = () => setIsExitModalOpen(false);
+
+  const displayName = user?.name || user?.login || "Пользователь";
 
   return (
-    <HeaderWrapper>
-      <div className="container">
-        <HeaderBlock>
-          <HeaderLogo $show={!isDarkTheme}>
-            <a href="" target="_self" rel="noreferrer">
-              <img src="/images/logo.png" alt="logo" />
-            </a>
-          </HeaderLogo>
+    <>
+      <HeaderWrapper>
+        <div className="container">
+          <HeaderBlock>
+            <HeaderLogo $show={!isDarkTheme}>
+              <Link to="/">
+                <img src="/images/logo.png" alt="logo" />
+              </Link>
+            </HeaderLogo>
+            <HeaderLogo $show={isDarkTheme}>
+              <Link to="/">
+                <img src="/images/logo_dark.png" alt="logo" />
+              </Link>
+            </HeaderLogo>
+            <HeaderNav>
+              <HeaderButton onClick={openNewCardModal} className="_hover01">
+                Создать новую задачу
+              </HeaderButton>
+              <UserButton
+                onClick={() => setIsUserPopupOpen(!isUserPopupOpen)}
+                className="_hover02"
+              >
+                {displayName}
+              </UserButton>
+              {isUserPopupOpen && (
+                <PopUser
+                  onThemeToggle={toggleTheme}
+                  isDarkTheme={isDarkTheme}
+                  onLogout={handleExitClick}
+                  user={user}
+                />
+              )}
+            </HeaderNav>
+          </HeaderBlock>
+        </div>
+      </HeaderWrapper>
 
-          <HeaderLogo $show={isDarkTheme}>
-            <a href="" target="_self" rel="noreferrer">
-              <img src="/images/logo_dark.png" alt="logo" />
-            </a>
-          </HeaderLogo>
+      {isNewCardModalOpen && (
+        <Modal onClose={closeNewCardModal}>
+          <PopNewCard onClose={closeNewCardModal} />
+        </Modal>
+      )}
 
-          <HeaderNav>
-            <HeaderButton href="#popNewCard">Создать новую задачу</HeaderButton>
-            <UserButton onClick={toggleUserPopup}>Ivan Ivanov</UserButton>
-
-            {isUserPopupOpen && (
-              <UserPopup ref={popupRef}>
-                <UserName>Ivan Ivanov</UserName>
-                <UserEmail>ivan.ivanov@gmail.com</UserEmail>
-                <ThemeToggle>
-                  <p>Темная тема</p>
-                  <ThemeCheckbox
-                    type="checkbox"
-                    checked={isDarkTheme}
-                    onChange={handleThemeToggle}
-                  />
-                </ThemeToggle>
-                <LogoutButton onClick={handleLogoutClick}>
-                  <a href="#popExit">Выйти</a>
-                </LogoutButton>
-              </UserPopup>
-            )}
-          </HeaderNav>
-        </HeaderBlock>
-      </div>
-    </HeaderWrapper>
+      {isExitModalOpen && (
+        <Modal onClose={closeExitModal}>
+          <ExitModal
+            onConfirm={handleLogoutConfirm}
+            onCancel={closeExitModal}
+          />
+        </Modal>
+      )}
+    </>
   );
 }
 

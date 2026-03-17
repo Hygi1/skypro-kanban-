@@ -1,68 +1,43 @@
-import { useState, useEffect } from "react";
+import React from "react";
+import CategoryBadge from "../CategoryBadge/CategoryBadge";
 import {
   CardItem,
   CardWrapper,
   CardGroup,
-  CardTheme,
   CardButton,
   CardContent,
   CardTitle,
   CardDate,
+  CardActions,
 } from "./Card.styled";
 
-function Card({ topic, title, date }) {
-  const [isDarkTheme, setIsDarkTheme] = useState(false);
+const Card = ({ card, onClick }) => {
+  if (!card) return null;
 
-  useEffect(() => {
-    const checkTheme = () => {
-      setIsDarkTheme(document.body.classList.contains("dark-theme"));
-    };
+  const {
+    id = "",
+    title = "Без названия",
+    category = "Research",
+    date = "",
+  } = card;
 
-    checkTheme();
-
-    const observer = new MutationObserver(checkTheme);
-    observer.observe(document.body, {
-      attributes: true,
-      attributeFilter: ["class"],
-    });
-
-    return () => observer.disconnect();
-  }, []);
-
-  const getThemeColor = (topic) => {
-    switch (topic) {
-      case "Web Design":
-        return "orange";
-      case "Research":
-        return "green";
-      case "Copywriting":
-        return "purple";
-      default:
-        return "gray";
-    }
-  };
-
-  const themeColor = getThemeColor(topic);
+  const handleClick = () => onClick(id);
 
   return (
-    <CardItem>
-      <CardWrapper $isDark={isDarkTheme}>
+    <CardItem onClick={handleClick}>
+      <CardWrapper>
         <CardGroup>
-          <CardTheme $color={themeColor}>
-            <p>{topic}</p>
-          </CardTheme>
-          <a href="#popBrowse" target="_self" rel="noreferrer">
+          <CategoryBadge category={category} />
+          <CardActions>
             <CardButton>
               <div></div>
               <div></div>
               <div></div>
             </CardButton>
-          </a>
+          </CardActions>
         </CardGroup>
         <CardContent>
-          <a href="#popBrowse" target="_self" rel="noreferrer">
-            <CardTitle $isDark={isDarkTheme}>{title}</CardTitle>
-          </a>
+          <CardTitle>{title}</CardTitle>
           <CardDate>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -98,6 +73,6 @@ function Card({ topic, title, date }) {
       </CardWrapper>
     </CardItem>
   );
-}
+};
 
 export default Card;
